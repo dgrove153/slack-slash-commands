@@ -6,6 +6,9 @@ app.get('/', function (req, res) {
 		res.send('Hello Wrld!');
 });
 
+app.post('/darren', function(req, res) {
+		res.send('test post: ' + req.body.text);
+}
 
 var server = app.listen(app.get('port'), function () {
 		var host = server.address().address;
