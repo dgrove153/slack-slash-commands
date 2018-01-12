@@ -8,7 +8,7 @@ app.get('/', function (req, res) {
 
 app.post('/darren', function(req, res) {
 		res.send('test post: ' + req.body.text);
-}
+});
 
 var server = app.listen(app.get('port'), function () {
 		var host = server.address().address;
