@@ -18,7 +18,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/blah', function(req, res) {
-		var text = "testz post: " + req.body.text;
+		var text = "testssz post: " + req.body.text;
 		res.send(text);
 });
 
