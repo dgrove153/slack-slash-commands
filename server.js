@@ -17,6 +17,12 @@ app.get('/', function (req, res) {
 		res.send('Hello Wrld!');
 });
 
+app.post('/blah', function(req, res) {
+		var text = "testz post: " + req.body.text;
+		res.send(text);
+});
+
 app.post('/darren', function(req, res) {
-		res.send("{ \"response_type\": \"in_channel\", \"text\": \"test post: " + req.body.text + " }");
+		var text = "testz post: " + req.body.text;
+		res.send("{ \"response_type\": \"in_channel\", \"text\": \"" + text + "\" }");
 });
