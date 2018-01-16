@@ -14,11 +14,11 @@ var server = app.listen(app.get('port'), function () {
 });
 
 app.get('/', function (req, res) {
-		res.send('Hello Wrld!!!!');
+		res.send('Hello sadasdWrld!!!!');
 });
 
 app.post('/blah', function(req, res) {
-		var text = "testz post: " + req.body.text;
+		var text = "testssz post: " + req.body.text;
 		res.send(text);
 });
 
