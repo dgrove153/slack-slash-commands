@@ -18,5 +18,5 @@ app.get('/', function (req, res) {
 });
 
 app.post('/darren', function(req, res) {
-		res.send('tests post: ' + req.body.text);
+		res.send("{ \"response_type\": \"in_channel\", \"text\": \"test post: " + req.body.text + " }");
 });
