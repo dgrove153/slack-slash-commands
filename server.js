@@ -23,6 +23,7 @@ app.post('/blah', function(req, res) {
 });
 
 app.post('/darren', function(req, res) {
+		res.setHeader("Content-type", "application/json");
 		var text = "testz post: " + req.body.text;
 		res.send("{ \"response_type\": \"in_channel\", \"text\": \"" + text + "\" }");
 });
