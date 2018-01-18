@@ -1,6 +1,7 @@
 var app = require('./app');
 var express = require('express');
 var bodyParser = require('body-parser');
+var request = require('request');
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -17,9 +18,13 @@ app.get('/', function (req, res) {
 		res.send('Hello Wrld!!!!');
 });
 
-app.post('/blah', function(req, res) {
-		var text = "testz post: " + req.body.text;
-		res.send(text);
+app.post('/stock', function(req, res) {
+		var stockReq = req.body.stock;
+		var apiUrl = 'https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=' + stockReq + '&apikey=VVCZ3DAK6MZGR2XW';
+		
+		request(apiUrl, function (error, response, body) {
+			res.send(body);
+		});
 });
 
 app.post('/darren', function(req, res) {
