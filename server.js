@@ -22,10 +22,19 @@ app.post('/stock', function(req, res) {
 		var stockReq = req.body.stock;
 		var apiUrl = 'https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=' + stockReq + '&apikey=VVCZ3DAK6MZGR2XW';
 		
-		request(apiUrl, function (error, response, body) {
+		var options = {
+			uri: apiUrl
+		};
+		
+		if(req.headers.host.indexOf("localhost") > -1) {
+			options.proxy = "http://proxy.blackstone.com:8080";
+		};
+
+		request(options, function (error, response, body) {
 			res.send(body);
 		});
 });
+
 
 app.post('/darren', function(req, res) {
 		res.setHeader("Content-type", "application/json");
