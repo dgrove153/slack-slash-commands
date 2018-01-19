@@ -38,7 +38,7 @@ app.post('/stock', function(req, res) {
 			resp.price = stock['Stock Quotes'][0]['2. price'];
 			
 			var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
-			text += ", \"color\": \"good\", \"fields\":[ { \"title\":\"" + resp.symbol + "\", \"value\":\"Current Price: " + resp.price + "%\" } ]"
+			text += ", \"color\": \"good\", \"fields\":[ { \"title\":\"" + resp.symbol + "\", \"value\":\"Current Price: " + resp.price + "\" } ]"
 			text += "} ]";
 
 			res.setHeader("Content-type", "application/json");
