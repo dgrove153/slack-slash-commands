@@ -20,7 +20,7 @@ app.get('/', function (req, res) {
 });
 
 app.post('/stock', function(req, res) {
-		var stockReq = req.body.stock;
+		var stockReq = req.body.text;
 		var apiUrl = 'https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=' + stockReq + '&apikey=VVCZ3DAK6MZGR2XW'
 		
 		var options = {
