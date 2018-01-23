@@ -28,7 +28,7 @@ app.post('/stock', function(req, res) {
 		};
 		
 		if(req.headers.host.indexOf("localhost") > -1) {
-			options.proxy = "http://cs41cb06pxy03.blackstone.com:8080";
+			options.proxy = "http://cs41cb06pxy01.blackstone.com:8080";
 		};
 		
 		request(options, function (error, response, body) {
@@ -37,12 +37,14 @@ app.post('/stock', function(req, res) {
 			resp.symbol = stock['Stock Quotes'][0]['1. symbol'];
 			resp.price = stock['Stock Quotes'][0]['2. price'];
 			
-			var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
-			text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.symbol + "\", \"value\":\"Current Price: " + resp.price + "\" } ]"
-			text += "} ]";
+			res.send(resp);
+			
+			// var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
+			// text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.symbol + "\", \"value\":\"Current Price: " + resp.price + "\" } ]"
+			// text += "} ]";
 
-			res.setHeader("Content-type", "application/json");
-			res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+			// res.setHeader("Content-type", "application/json");
+			// res.send("{ \"response_type\": \"in_channel\"," + text + " }");
 		});
 });
 
