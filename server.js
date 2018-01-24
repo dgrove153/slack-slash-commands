@@ -102,7 +102,7 @@ app.post('/direction', function(req, res) {
 			
 			
 			 var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
-			 text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + calculateCityDistance + "\", \"value\":\"Current Price: " + respo.distance + "\" } ]"
+			 text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + calculateCityDistance + "\", \"value\":\"Driving Distance: " + respo.distance + "\" } ]"
 			 text += "} ]";
 
 			 res.setHeader("Content-type", "application/json");
