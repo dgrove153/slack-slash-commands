@@ -19,9 +19,9 @@ app.get('/', function (req, res) {
 		res.send('Hello Wrld!!!!');
 });
 
-app.post('/stock', function(req, res) {
-		var stockReq = req.body.text;
-		var apiUrl = 'https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=' + stockReq + '&apikey=VVCZ3DAK6MZGR2XW'
+app.post('/news', function(req, res) {
+		var newsReq = req.body.text;
+		var apiUrl = 'https://newsapi.org/v2/everything?q=' + newsReq + '&language=en&sortBy=popularity&apiKey=8734dbf7115e4897b1e5b4553325633d'
 		
 		var options = {
 			uri: apiUrl
@@ -32,19 +32,28 @@ app.post('/stock', function(req, res) {
 		};
 		
 		request(options, function (error, response, body) {
-			var stock = JSON.parse(body);
+			var news = JSON.parse(body);
 			var resp = {};
-			resp.symbol = stock['Stock Quotes'][0]['1. symbol'];
-			resp.price = stock['Stock Quotes'][0]['2. price'];
+			resp.headline = news['articles'][0]['title'];
+			resp.url = news['articles'][0]['url'];
 			
+			resp.headline1 = news['articles'][1]['title'];
+			resp.url1 = news['articles'][1]['url'];
+			
+			resp.headline2 = news['articles'][2]['title'];
+			resp.url2 = news['articles'][2]['url'];
 			res.send(resp);
 			
-			// var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
-			// text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.symbol + "\", \"value\":\"Current Price: " + resp.price + "\" } ]"
-			// text += "} ]";
+			resp.headline3 = news['articles'][3]['title'];
+			resp.url3 = news['articles'][3]['url'];
+			res.send(resp);
+			
+			var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
+			text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.headline + "\", \"value\":\"Top Article: " + resp.URL + "\" } ]"
+			text += "} ]";
 
-			// res.setHeader("Content-type", "application/json");
-			// res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+			res.setHeader("Content-type", "application/json");
+			res.send("{ \"response_type\": \"in_channel\"," + text + " }");
 		});
 });
 
