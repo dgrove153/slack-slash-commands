@@ -54,3 +54,39 @@ app.post('/google', function(req, res) {
 					
 		});
 });
+
+app.post('/direction', function(req, res) {
+		var calculateCityDistance = req.body.text;
+		var apiUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=NewYork,NY&destinations='+ calculateCityDistance +'&key=AIzaSyCehJJ3gQeMG1N_CIl9vkCwHQN3RMEZnXo'
+		
+		var options = {
+			uri: apiUrl
+		};
+		
+		if(req.headers.host.indexOf("localhost") > -1) {
+			options.proxy = "http://cs41cb06pxy03.blackstone.com:8080";
+		};
+		
+		 request(options, function (error, response, body) {
+			 var directions = JSON.parse(body);
+			 var respo = {};
+			 respo.distance = directions['rows'][0]['elements'][0]['distance']['text'];
+			 respo.time = //blahblah
+			 
+			
+			
+			 var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
+			 text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + calculateCityDistance + "\", \"value\":\"Current Price: " + respo.distance + "\" } ]"
+			 text += "} ]";
+
+			 res.setHeader("Content-type", "application/json");
+			 res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+		 });
+});
+
+
+app.post('/darren', function(req, res) {
+		res.setHeader("Content-type", "application/json");
+		var text = "testz post: " + req.body.text;
+		res.send("{ \"response_type\": \"in_channel\", \"text\": \"" + text + "\" }");
+});
