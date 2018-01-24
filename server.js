@@ -133,11 +133,9 @@ app.post('/news', function(req, res) {
 			
 			resp.headline2 = news['articles'][2]['title'];
 			resp.url2 = news['articles'][2]['url'];
-			res.send(resp);
 			
 			resp.headline3 = news['articles'][3]['title'];
 			resp.url3 = news['articles'][3]['url'];
-			res.send(resp);
 			
 			var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
 			text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.headline + "\", \"value\":\"Top Article: " + resp.URL + "\" } ]"
