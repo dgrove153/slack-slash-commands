@@ -85,7 +85,7 @@ app.post('/google', function(req, res) {
 
 app.post('/direction', function(req, res) {
 		var calculateCityDistance = req.body.text;
-		var apiUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=NewYork,NY&destinations='+ calculateCityDistance +'&key=AIzaSyCehJJ3gQeMG1N_CIl9vkCwHQN3RMEZnXo'
+		var apiUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=601%Lexington%ave%NYC%NY&destinations='+ calculateCityDistance +'&key=AIzaSyCehJJ3gQeMG1N_CIl9vkCwHQN3RMEZnXo'
 		
 		var options = {
 			uri: apiUrl
