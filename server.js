@@ -138,7 +138,7 @@ app.post('/news', function(req, res) {
 			resp.url3 = news['articles'][3]['url'];
 			
 			var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
-			text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.headline + "\", \"value\":\"Top Article: " + resp.URL + "\" } ]"
+			text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.headline + "\", \"value\":\"Top Article: " + resp.url + "\" } ]"
 			text += "} ]";
 
 			res.setHeader("Content-type", "application/json");
