@@ -29,17 +29,21 @@ app.post('/stock', function(req, res) {
 		};
 		
 		request(options, function (error, response, body) {
-			var stock = JSON.parse(body);
-			var resp = {};
-			resp.symbol = stock['Stock Quotes'][0]['1. symbol'];
-			resp.price = stock['Stock Quotes'][0]['2. price'];
-			
-			var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
-			text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.symbol + "\", \"value\":\"Current Price: " + resp.price + "\" } ]"
-			text += "} ]";
+			try {
+				var stock = JSON.parse(body);
+				var resp = {};
+				resp.symbol = stock['Stock Quotes'][0]['1. symbol'];
+				resp.price = stock['Stock Quotes'][0]['2. price'];
+				
+				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
+				text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.symbol + "\", \"value\":\"Current Price: " + resp.price + "\" } ]"
+				text += "} ]";
 
-			res.setHeader("Content-type", "application/json");
-			res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+				res.setHeader("Content-type", "application/json");
+				res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+			} catch (err) {
+				res.send("Incorrect input, please try again");
+			}
 		});
 });
 
@@ -65,49 +69,56 @@ app.post('/google', function(req, res) {
 		};
 		
 		request(options, function (error, response, body) {
-			var search = JSON.parse(body);
-			var resp = {};
-			resp.title =  search['items'][0]['title'];
-			resp.snippet = search['items'][0]['snippet'];
-			//resp.thelinks = search['items']['link'];
-			
-			//res.send(resp);
-						
-			var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
-			text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.title + "\", \"value\":\"Current Price: " + resp.snippet + "\" } ]"
-			text += "} ]";
+			try {
+				var search = JSON.parse(body);
+				var resp = {};
+				resp.title =  search['items'][0]['title'];
+				resp.snippet = search['items'][0]['snippet'];
+				//resp.thelinks = search['items']['link'];
+				
+				//res.send(resp);
+							
+				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
+				text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.title + "\", \"value\":\"Current Price: " + resp.snippet + "\" } ]"
+				text += "} ]";
 
-			res.setHeader("Content-type", "application/json");
-			res.send("{ \"response_type\": \"in_channel\"," + text + " }");
-					
-		});
+				res.setHeader("Content-type", "application/json");
+				res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+			} catch (err) {
+				res.send("Incorrect input, please try again");
+			}
+		});	
 });
 
 app.post('/direction', function(req, res) {
 		var calculateCityDistance = req.body.text;
 		var apiUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=601%Lexington%ave%NYC%NY&destinations='+ calculateCityDistance +'&key=AIzaSyCehJJ3gQeMG1N_CIl9vkCwHQN3RMEZnXo'
-		
+
 		var options = {
 			uri: apiUrl
 		};
-		
+
 		if(req.headers.host.indexOf("localhost") > -1) {
 			options.proxy = "http://cs41cb06pxy03.blackstone.com:8080";
 		};
 		
-		 request(options, function (error, response, body) {
-			 var directions = JSON.parse(body);
-			 var respo = {};
-			 respo.distance = directions['rows'][0]['elements'][0]['distance']['text'];			 
-			
-			
-			 var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
-			 text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + calculateCityDistance + "\", \"value\":\"Distance: " + respo.distance + "\" } ]"
-			 text += "} ]";
+		request(options, function (error, response, body) {
+			try {
+				var directions = JSON.parse(body);
+				var respo = {};
+				respo.distance = directions['rows'][0]['elements'][0]['distance']['text'];			 
 
-			 res.setHeader("Content-type", "application/json");
-			 res.send("{ \"response_type\": \"in_channel\"," + text + " }");
-		 });
+
+				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
+				text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + calculateCityDistance + "\", \"value\":\"Distance: " + respo.distance + "\" } ]"
+				text += "} ]";
+
+				res.setHeader("Content-type", "application/json");
+				res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+			} catch (err) {
+				res.send("Incorrect input, please try again");
+			}
+		});
 });
 
 app.post('/news', function(req, res) {
@@ -123,26 +134,30 @@ app.post('/news', function(req, res) {
 		};
 		
 		request(options, function (error, response, body) {
-			var news = JSON.parse(body);
-			var resp = {};
-			resp.headline = news['articles'][0]['title'];
-			resp.url = news['articles'][0]['url'];
-			
-			resp.headline1 = news['articles'][1]['title'];
-			resp.url1 = news['articles'][1]['url'];
-			
-			resp.headline2 = news['articles'][2]['title'];
-			resp.url2 = news['articles'][2]['url'];
-			
-			resp.headline3 = news['articles'][3]['title'];
-			resp.url3 = news['articles'][3]['url'];
-			
-			var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
-			text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.headline + "\", \"value\":\"Top Article: " + resp.url + "\" } ]"
-			text += "} ]";
+			try {
+				var news = JSON.parse(body);
+				var resp = {};
+				resp.headline = news['articles'][0]['title'];
+				resp.url = news['articles'][0]['url'];
+				
+				resp.headline1 = news['articles'][1]['title'];
+				resp.url1 = news['articles'][1]['url'];
+				
+				resp.headline2 = news['articles'][2]['title'];
+				resp.url2 = news['articles'][2]['url'];
+				
+				resp.headline3 = news['articles'][3]['title'];
+				resp.url3 = news['articles'][3]['url'];
+				
+				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
+				text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + resp.headline + "\", \"value\":\"Top Article: " + resp.url + "\" } ]"
+				text += "} ]";
 
-			res.setHeader("Content-type", "application/json");
-			res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+				res.setHeader("Content-type", "application/json");
+				res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+			} catch (err) {
+				res.send("Incorrect input, please try again");
+			}
 		});
 });
 
