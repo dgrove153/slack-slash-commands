@@ -76,9 +76,9 @@ app.post('/stock', function(req, res) {
 				
 				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
 				if(resp.changePercent < 0) {
-					text += ", \"color\": \"danger\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + formattedDate + "\", \"value\":\"Last Price: " + resp.current + " | " + resp.change + " | " + resp.changePercent + "%\" } ]"
+					text += ", \"color\": \"#78f41f\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + formattedDate + "\", \"value\":\"Last Price: " + resp.current + " | " + resp.change + " | " + resp.changePercent + "%\" } ]"
 				} else {
-					text += ", \"color\": \"good\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + formattedDate + "\", \"value\":\"Last Price: " + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%\" } ]"
+					text += ", \"color\": \"#f41f1f\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + formattedDate + "\", \"value\":\"Last Price: " + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%\" } ]"
 				}
 				
 				text += "} ]";
