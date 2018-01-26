@@ -25,7 +25,7 @@ app.post('/stock', function(req, res) {
 		};
 		
 		if(req.headers.host.indexOf("localhost") > -1) {
-			options.proxy = "http://cs41cb06pxy03.blackstone.com:8080";
+			options.proxy = "http://cs41cb06pxy01.blackstone.com:8080";
 		};
 		
 		request(options, function (error, response, body) {
@@ -64,9 +64,9 @@ app.post('/stock', function(req, res) {
 				
 				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
 				if(resp.changePercent < 0) {
-					text += ", \"color\": \"danger\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + resp.time + "\", \"value\":\"Last Price: " + resp.current + ",  " + resp.change + "    " + resp.changePercent + "%\" } ]"
+					text += ", \"color\": \"danger\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + new Date(resp.time).toLocaleString() + "\", \"value\":\"Last Price: " + resp.current + " | -" + resp.change + " | " + resp.changePercent + "%\" } ]"
 				} else {
-					text += ", \"color\": \"good\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + resp.time + "\", \"value\":\"Last Price " + resp.current + ",  " + resp.change + "    " + resp.changePercent + "%\" } ]"
+					text += ", \"color\": \"good\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + new Date(resp.time).toLocaleString() + "\", \"value\":\"Last Price: " + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%\" } ]"
 				}
 				
 				text += "} ]";
@@ -75,6 +75,7 @@ app.post('/stock', function(req, res) {
 				res.send("{ \"response_type\": \"in_channel\"," + text + " }");
 			 } catch (err) {
 				 res.send("Incorrect input, please try again");
+				 console.log(err);
 			 }
 		});
 });
