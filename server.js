@@ -15,6 +15,16 @@ var server = app.listen(app.get('port'), function () {
 		console.log('Example app listening at http://%s:%s', host, port);
 });
 
+function formatDate(date) {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'pm' : 'am';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear() + " " + strTime;
+};
 
 app.post('/stock', function(req, res) {
 		var stockReq = req.body.text;
@@ -62,11 +72,13 @@ app.post('/stock', function(req, res) {
 				resp.changePercent = (((close - open) / open)*100).toFixed(2);
 				resp.time = index[index.length-1];
 				
+				var formattedDate = formatDate(new Date(resp.time));
+				
 				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
 				if(resp.changePercent < 0) {
-					text += ", \"color\": \"danger\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + new Date(resp.time).toLocaleString() + "\", \"value\":\"Last Price: " + resp.current + " | " + resp.change + " | " + resp.changePercent + "%\" } ]"
+					text += ", \"color\": \"danger\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + formattedDate + "\", \"value\":\"Last Price: " + resp.current + " | " + resp.change + " | " + resp.changePercent + "%\" } ]"
 				} else {
-					text += ", \"color\": \"good\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + new Date(resp.time).toLocaleString() + "\", \"value\":\"Last Price: " + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%\" } ]"
+					text += ", \"color\": \"good\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + formattedDate + "\", \"value\":\"Last Price: " + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%\" } ]"
 				}
 				
 				text += "} ]";
