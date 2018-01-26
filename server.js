@@ -28,7 +28,7 @@ function formatDate(date) {
 
 app.post('/stock', function(req, res) {
 		var stockReq = req.body.text;
-		var apiUrl = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + stockReq + '&interval=15min&apikey=VVCZ3DAK6MZGR2XW'
+		var apiUrl = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + stockReq + '&interval=1min&apikey=VVCZ3DAK6MZGR2XW'
 		
 		var options = {
 			uri: apiUrl
@@ -41,7 +41,7 @@ app.post('/stock', function(req, res) {
 		request(options, function (error, response, body) {
 			 try {
 				var stock = JSON.parse(body);
-				var prices = stock['Time Series (15min)'];
+				var prices = stock['Time Series (1min)'];
 				var index = [];
 				
 				var today = new Date().getDate();
@@ -76,9 +76,9 @@ app.post('/stock', function(req, res) {
 				
 				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
 				if(resp.changePercent < 0) {
-					text += ", \"color\": \"#f41f1f\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + formattedDate + "\", \"value\":\"Last Price: " + resp.current + " | " + resp.change + " | " + resp.changePercent + "%\" } ]"
+					text += ", \"color\": \"#f41f1f\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Price: " + resp.current + " | " + resp.change + " | " + resp.changePercent + "%\", \"value\":\"Last Updated: " + formattedDate + "\" } ]"
 				} else {
-					text += ", \"color\": \"#78f41f\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Updated: " + formattedDate + "\", \"value\":\"Last Price: " + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%\" } ]"
+					text += ", \"color\": \"#78f41f\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Price: " + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%\", \"value\":\"Last Updated: " + formattedDate + "\" } ]"
 				}
 				
 				text += "} ]";
