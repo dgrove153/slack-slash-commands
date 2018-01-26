@@ -70,7 +70,6 @@ app.post('/stock', function(req, res) {
 				resp.current = close;
 				resp.change = (close - open).toFixed(2);
 				resp.changePercent = (((close - open) / open)*100).toFixed(2);
-				resp.time = index[index.length-1];
 				
 				var formattedDate = formatDate(new Date(resp.time));
 				
@@ -91,6 +90,73 @@ app.post('/stock', function(req, res) {
 			 }
 		});
 });
+
+app.post('/crypto', function(req, res) {
+		var cryptoReq = req.body.text;
+		var apiUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=' + cryptoReq + '&market=USD&apikey=VVCZ3DAK6MZGR2XW'
+		
+		var options = {
+			uri: apiUrl
+		};
+		
+		if(req.headers.host.indexOf("localhost") > -1) {
+			options.proxy = "http://cs41cb06pxy01.blackstone.com:8080";
+		};
+		
+		request(options, function (error, response, body) {
+			 try {
+				var stock = JSON.parse(body);
+				var prices = stock['Time Series (Digital Currency Daily)'];
+				var index = [];
+
+				// build the index
+				for (var x in prices) {
+					index.push(x);
+				};
+
+				// sort the index
+				index.sort(function (a, b) {    
+				   return a == b ? 0 : (a > b ? 1 : -1); 
+				}); 
+				
+				var resp = {};
+				resp.date = index[index.length-1];
+				var latest = prices[resp.date];
+				var open = latest['1a. open (USD)'];
+				var close = latest['4a. close (USD)'];
+				resp.high = parseFloat(latest['2a. high (USD)']).toFixed(2);
+				resp.low = parseFloat(latest['3a. low (USD)']).toFixed(2);
+				resp.symbol = stock['Meta Data']['2. Digital Currency Code'].toUpperCase();
+				resp.name = stock['Meta Data']['3. Digital Currency Name'];
+				resp.current = parseFloat(close).toFixed(2);
+				resp.change = (close - open).toFixed(2);
+				resp.changePercent = (((close - open) / open)*100).toFixed(2);
+				
+				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
+				if(resp.changePercent < 0) {
+					text += ", \"color\": \"#f41f1f\", \"fields\":[ { \"title\":\"" + resp.name + " (" + resp.symbol + ") to USD\", \"value\":\"Last Price: " + resp.current + " | " + resp.change + " | " + resp.changePercent + "%";
+					text += "\n Day High: " + resp.high + " | Day Low: " + resp.low;
+					text += "\" } ]";
+				} else {
+					text += ", \"color\": \"#78f41f\", \"fields\":[ { \"title\":\"" + resp.name + " (" + resp.symbol + ") to USD\", \"value\":\"Last Price: " + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%";
+					text += "\n Day High: " + resp.high + " | Day Low: " + resp.low;
+					text += "\" } ]";
+				}
+				
+				text += "} ]";
+
+				res.setHeader("Content-type", "application/json");
+				res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+			 } catch (err) {
+				 res.send("Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator");
+				 console.log(err);
+			 }
+		});
+});
+
+
+
+
 
 //api key for custom search api on google : AIzaSyDN8o0No9F1nMjwz-C_ByB8BOAnY-4rXzM
 // var apiUrl = 'https://api.stackexchange.com/docs/faqs-by-tags#page=1&pagesize=5&tags=' + stackSubject + '&filter=default&site=stackoverflow&run=true'
