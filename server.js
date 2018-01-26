@@ -74,7 +74,7 @@ app.post('/stock', function(req, res) {
 				res.setHeader("Content-type", "application/json");
 				res.send("{ \"response_type\": \"in_channel\"," + text + " }");
 			 } catch (err) {
-				 res.send("Incorrect input, please try again");
+				 res.send("Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator");
 				 console.log(err);
 			 }
 		});
