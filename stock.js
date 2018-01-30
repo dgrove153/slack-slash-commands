@@ -36,11 +36,11 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	
 	try {
 		var task = request(options);
-		await snooze(1000);
+		await snooze(500);
 		postToSlack(slackUrl, useProxy, "{\"text\": \"Still going...\"}");
-		await snooze(1000);
+		await snooze(500);
 		postToSlack(slackUrl, useProxy, "{\"text\": \"Still going...\"}");
-		await snooze(1000);
+		await snooze(500);
 		postToSlack(slackUrl, useProxy, "{\"text\": \"Still going...\"}");
 		
 		var apiResp = await task;
