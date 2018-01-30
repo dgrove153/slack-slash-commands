@@ -35,6 +35,7 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	res.setHeader("Content-type", "application/json");
 	
 	try {
+		postToSlack(slackUrl, useProxy, "{\"text\": \"Starting...\"}");
 		var task = request(options);
 		await snooze(500);
 		postToSlack(slackUrl, useProxy, "{\"text\": \"Still going...\"}");
