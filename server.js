@@ -27,12 +27,16 @@ app.post('/news', function (req, res) {
 });
 
 app.post('/stock', function (req, res) {
+	res.send({"text": "Keep alive"});
+	
 	(async () => {
 		stock.stock(req, res)
 	})();
 });
 
 app.post('/crypto', function (req, res) {
+	res.send({"text": "Keep alive"});
+	
 	(async () => {
 		stock.crypto(req, res)
 	})();

@@ -32,9 +32,6 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 		options.proxy = proxy;
 	};
 	
-	res.setHeader("Content-type", "application/json");
-	res.send({"text": "Keep alive"});
-	
 	var slackPayload = {"text":"Keeping slack response alive...", "response_type":"ephemeral"};
 	slackPayload = JSON.stringify(slackPayload);
 	
