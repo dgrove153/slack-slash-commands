@@ -37,7 +37,7 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	try {
 		postToSlack(slackUrl, useProxy, "{\"text\": \"Starting...\"}");
 		var task = request(options);
-		await snooze(2000);
+		await snooze(1000);
 		postToSlack(slackUrl, useProxy, "{\"text\": \"Still going...\"}");
 		await snooze(1000);
 		postToSlack(slackUrl, useProxy, "{\"text\": \"Still going...\"}");
@@ -49,8 +49,6 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 		res.send("{'text': 'Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator'}");
 		console.log(err);
 	};
-	
-	res.end();
 };
 
 var postToSlack = function (slackUrl, useProxy, msg) {
