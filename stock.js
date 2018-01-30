@@ -55,7 +55,7 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 
 var postToSlack = function (slackUrl, useProxy, msg) {
 	var options = {
-		url: slackUrl,
+		uri: slackUrl,
 		form: {payload: JSON.stringify(msg)},
 		headers: {"Content-type": "application/json"}
 	};
