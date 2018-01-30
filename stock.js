@@ -35,14 +35,14 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	res.setHeader("Content-type", "application/json");
 	
 	try {
-		postToSlack(slackUrl, useProxy, "{\"text\": \"Starting...\"}");
+		postToSlack(slackUrl, useProxy);
 		var task = request(options);
-		await snooze(500);
-		postToSlack(slackUrl, useProxy, "{\"text\": \"Still going...\"}");
-		await snooze(500);
-		postToSlack(slackUrl, useProxy, "{\"text\": \"Still going...\"}");
-		await snooze(500);
-		postToSlack(slackUrl, useProxy, "{\"text\": \"Still going...\"}");
+		await snooze(1000);
+		postToSlack(slackUrl, useProxy);
+		await snooze(1000);
+		postToSlack(slackUrl, useProxy);
+		await snooze(1000);
+		postToSlack(slackUrl, useProxy);
 		
 		var apiResp = await task;
 		var formatted = formatMethod(apiResp);
@@ -53,11 +53,15 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	};
 };
 
-var postToSlack = function (slackUrl, useProxy, msg) {
+var postToSlack = function (slackUrl, useProxy) {
+	var webhook = slackUrl;
+	var payload={"text":"Ping Pong", "response_type":"ephemeral"}
+	payload = JSON.stringify(payload)
+	var headers = {"Content-type": "application/json"};
 	var options = {
-		uri: slackUrl,
-		form: {payload: JSON.stringify(msg)},
-		headers: {"Content-type": "application/json"}
+		uri: webhook,
+		form: {payload: payload},
+		headers: headers
 	};
 	
 	if(useProxy) {
@@ -67,11 +71,9 @@ var postToSlack = function (slackUrl, useProxy, msg) {
 	if(slackUrl != '') {
 		reqSync.post(options, function(err, res){
 			if(err){console.log(err)}
-			if(res){console.log(res)}
+			if(res){console.log(res.body)}
 		});
-	} else {
-		console.log("No Slack URL - Trying to send \"" + msg + "\" - To: " + slackUrl);
-	}
+	};
 };
 
 function formatDate(date, offSetHours) {
