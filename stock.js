@@ -5,19 +5,21 @@ const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 var stockAsync = async function(req, res) {
 	var stockReq = req.body.text;
+	var slackUrl = req.body.response_url;
 	var apiUrl = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + stockReq + '&interval=1min&apikey=VVCZ3DAK6MZGR2XW'
 	
-	await getAndFormatResp(apiUrl, formatStockResults, req, res);
+	await getAndFormatResp(apiUrl, formatStockResults, slackUrl, req, res);
 };
 
 var cryptoAsync = async function(req, res) {
 	var cryptoReq = req.body.text;
+	var slackUrl = req.body.response_url;
 	var apiUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_INTRADAY&symbol=' + cryptoReq + '&market=USD&apikey=VVCZ3DAK6MZGR2XW'
 	
-	await getAndFormatResp(apiUrl, formatCryptoResults, req, res);
+	await getAndFormatResp(apiUrl, formatCryptoResults, slackUrl, req, res);
 };
 
-var getAndFormatResp = async function(apiUrl, formatMethod, req, res) {
+var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) {
 	var options = {
 		uri: apiUrl
 	};
@@ -27,23 +29,31 @@ var getAndFormatResp = async function(apiUrl, formatMethod, req, res) {
 	};
 	
 	res.setHeader("Content-type", "application/json");
-	res.write("{\"text\": \"Starting...\"}");
+	postToSlack(slackUrl, "{\"text\": \"Starting...\"}");
 	
 	try {
 		var task = request(options);
 		await snooze(1000);
-		res.write("{\"text\": \"Still going...\"}");
+		postToSlack(slackUrl, "{\"text\": \"Still going...\"}");
 		await snooze(1000);
-		res.write("{\"text\": \"Still going...\"}");
+		postToSlack(slackUrl, "{\"text\": \"Still going...\"}");
 		var apiResp = await task;
 		var formatted = formatMethod(apiResp);
 		res.write(formatted);
-		res.end();
 	} catch (err) {
 		res.write("{'text': 'Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator'}");
-		res.end();
 		console.log(err);
 	};
+	
+	res.end();
+};
+
+var postToSlack = new function (slackUrl, msg) {
+	request.post({
+		json: true,
+		url: slackUrl,
+		body: msg
+	});
 };
 
 function formatDate(date, offSetHours) {
