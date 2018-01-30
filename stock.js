@@ -44,9 +44,9 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 		
 		var apiResp = await task;
 		var formatted = formatMethod(apiResp);
-		res.write(formatted);
+		res.send(formatted);
 	} catch (err) {
-		res.write("{'text': 'Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator'}");
+		res.send("{'text': 'Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator'}");
 		console.log(err);
 	};
 	
