@@ -27,7 +27,7 @@ app.post('/news', function (req, res) {
 });
 
 app.post('/stock', function (req, res) {
-	res.send({"text": "Retrieving data..."});
+	res.send();
 	
 	(async () => {
 		stock.stock(req, res)
@@ -35,7 +35,7 @@ app.post('/stock', function (req, res) {
 });
 
 app.post('/crypto', function (req, res) {
-	res.send({"text": "Retrieving data..."});
+	res.send();
 	
 	(async () => {
 		stock.crypto(req, res)
