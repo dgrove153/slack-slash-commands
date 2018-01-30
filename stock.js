@@ -107,7 +107,7 @@ var formatStockResults = function(apiResp) {
 	var open = earliest['1. open'];
 	var close = latest['4. close'];
 	resp.symbol = stock['Meta Data']['2. Symbol'].toUpperCase();
-	resp.current = close;
+	resp.current = parseFloat(close).toFixed(2);
 	resp.change = (close - open).toFixed(2);
 	resp.changePercent = (((close - open) / open)*100).toFixed(2);
 
