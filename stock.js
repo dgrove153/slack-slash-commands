@@ -56,7 +56,7 @@ var postToSlack = function (slackUrl, msg) {
 		request.post({
 			json: true,
 			url: slackUrl,
-			body: msg
+			body: JSON.stringify(msg)
 		});
 	} else {
 		console.log("No Slack URL - Trying to send \"" + msg + "\" - To: " + slackUrl);
