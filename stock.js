@@ -40,12 +40,12 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	try {
 		postToSlack(slackUrl, useProxy, slackPayload);
 		var task = request(options);
-		await snooze(1000);
-		postToSlack(slackUrl, useProxy, slackPayload);
-		await snooze(1000);
-		postToSlack(slackUrl, useProxy, slackPayload);
-		await snooze(1000);
-		postToSlack(slackUrl, useProxy, slackPayload);
+		// await snooze(1000);
+		// postToSlack(slackUrl, useProxy, slackPayload);
+		// await snooze(1000);
+		// postToSlack(slackUrl, useProxy, slackPayload);
+		// await snooze(1000);
+		// postToSlack(slackUrl, useProxy, slackPayload);
 		
 		var apiResp = await task;
 		var formatted = formatMethod(apiResp);
