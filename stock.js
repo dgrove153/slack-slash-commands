@@ -33,21 +33,13 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	};
 	
 	res.setHeader("Content-type", "application/json");
+	res.send({"text": "Keep alive"});
 	
 	var slackPayload = {"text":"Keeping slack response alive...", "response_type":"ephemeral"};
 	slackPayload = JSON.stringify(slackPayload);
 	
 	try {
-		postToSlack(slackUrl, useProxy, slackPayload);
-		var task = request(options);
-		// await snooze(1000);
-		// postToSlack(slackUrl, useProxy, slackPayload);
-		// await snooze(1000);
-		// postToSlack(slackUrl, useProxy, slackPayload);
-		// await snooze(1000);
-		// postToSlack(slackUrl, useProxy, slackPayload);
-		
-		var apiResp = await task;
+		var apiResp = await request(options);
 		var formatted = formatMethod(apiResp);
 		postToSlack(slackUrl, useProxy, formatted);
 	} catch (err) {
