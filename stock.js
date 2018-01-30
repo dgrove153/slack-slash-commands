@@ -2,7 +2,6 @@ var request = require('request-promise');
 var reqSync = require('request');
 var json = require('JSON');
 
-const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 const proxy = "http://cs41cb06pxy03.blackstone.com:8080"
 const localSlackUri = 'https://hooks.slack.com/services/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';
 
@@ -163,7 +162,7 @@ var formatCryptoResults = function(apiResp) {
 
 	var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
 	if(resp.changePercent < 0) {
-		text += ", \"color\": \"#f41f1f\", \"fields\":[ { \"title\":\"" + resp.name + " (" + resp.symbol + ") to USD\", \"value\":\"Last Price: $" + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%";
+		text += ", \"color\": \"#f41f1f\", \"fields\":[ { \"title\":\"" + resp.name + " (" + resp.symbol + ") to USD\", \"value\":\"Last Price: $" + resp.current + " | " + resp.change + " | " + resp.changePercent + "%";
 		text += "\n Last Updated: " + formattedDate;
 		text += "\" } ]";
 	} else {
