@@ -29,14 +29,15 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	};
 	
 	res.setHeader("Content-type", "application/json");
-	postToSlack(slackUrl, "{\"text\": \"Starting...\"}");
 	
 	try {
+		postToSlack(slackUrl, "{\"text\": \"Starting...\"}");
 		var task = request(options);
 		await snooze(2000);
 		postToSlack(slackUrl, "{\"text\": \"Still going...\"}");
 		await snooze(1000);
 		postToSlack(slackUrl, "{\"text\": \"Still going...\"}");
+		
 		var apiResp = await task;
 		var formatted = formatMethod(apiResp);
 		res.write(formatted);
