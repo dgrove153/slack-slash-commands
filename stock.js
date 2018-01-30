@@ -52,6 +52,8 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 };
 
 var postToSlack = function (slackUrl, msg) {
+	console.log(msg);
+	console.log(JSON.stringify(msg));
 	if(slackUrl != '') {
 		request.post({
 			json: true,
