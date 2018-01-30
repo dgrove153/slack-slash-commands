@@ -4,6 +4,7 @@ var json = require('JSON');
 const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 var stockAsync = async function(req, res) {
+	console.log(req.body);
 	var stockReq = req.body.text;
 	var slackUrl = req.body.response_url || '';
 	var apiUrl = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + stockReq + '&interval=1min&apikey=VVCZ3DAK6MZGR2XW'
@@ -12,6 +13,7 @@ var stockAsync = async function(req, res) {
 };
 
 var cryptoAsync = async function(req, res) {
+	console.log(req.body);
 	var cryptoReq = req.body.text;
 	var slackUrl = req.body.response_url || '';
 	var apiUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_INTRADAY&symbol=' + cryptoReq + '&market=USD&apikey=VVCZ3DAK6MZGR2XW'
