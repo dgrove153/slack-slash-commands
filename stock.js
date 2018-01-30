@@ -34,33 +34,35 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	
 	res.setHeader("Content-type", "application/json");
 	
+	var slackPayload = {"text":"Keeping slack response alive...", "response_type":"ephemeral"};
+	slackPayload = JSON.stringify(slackPayload);
+	
 	try {
-		postToSlack(slackUrl, useProxy);
+		postToSlack(slackUrl, useProxy, slackPayload);
 		var task = request(options);
 		await snooze(1000);
-		postToSlack(slackUrl, useProxy);
+		postToSlack(slackUrl, useProxy, slackPayload);
 		await snooze(1000);
-		postToSlack(slackUrl, useProxy);
+		postToSlack(slackUrl, useProxy, slackPayload);
 		await snooze(1000);
-		postToSlack(slackUrl, useProxy);
+		postToSlack(slackUrl, useProxy, slackPayload);
 		
 		var apiResp = await task;
 		var formatted = formatMethod(apiResp);
-		res.send(formatted);
+		postToSlack(slackUrl, useProxy, formatted);
 	} catch (err) {
-		res.send("{'text': 'Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator'}");
+		var error = {"text":"Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator", "response_type":"ephemeral"};
+		postToSlack(slackUrl, useProxy, formatted);
 		console.log(err);
 	};
 };
 
-var postToSlack = function (slackUrl, useProxy) {
+var postToSlack = function (slackUrl, useProxy, payLoad) {
 	var webhook = slackUrl;
-	var payload={"text":"Ping Pong", "response_type":"ephemeral"}
-	payload = JSON.stringify(payload)
 	var headers = {"Content-type": "application/json"};
 	var options = {
 		uri: webhook,
-		form: {payload: payload},
+		form: {payload: payLoad},
 		headers: headers
 	};
 	
@@ -68,12 +70,12 @@ var postToSlack = function (slackUrl, useProxy) {
 		options.proxy = proxy;
 	};
 	
-	if(slackUrl != '') {
-		reqSync.post(options, function(err, res){
-			if(err){console.log(err)}
-			if(res){console.log(res.body)}
-		});
-	};
+	console.log(payLoad);
+	
+	reqSync.post(options, function(err, res){
+		if(err){console.log(err)}
+		if(res){console.log(res.body)}
+	});
 };
 
 function formatDate(date, offSetHours) {
