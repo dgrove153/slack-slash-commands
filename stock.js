@@ -57,6 +57,7 @@ var postToSlack = function (slackUrl, msg) {
 	if(slackUrl != '') {
 		request.post({
 			json: true,
+			headers = {"Content-type": "application/json"}
 			url: slackUrl,
 			body: JSON.stringify(msg)
 		});
