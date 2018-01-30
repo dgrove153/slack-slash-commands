@@ -5,18 +5,18 @@ const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 var stockAsync = async function(req, res) {
 	var stockReq = req.body.text;
-	var slackUrl = req.body.response_url;
+	var slackUrl = req.body.response_url || '';
 	var apiUrl = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + stockReq + '&interval=1min&apikey=VVCZ3DAK6MZGR2XW'
 	
-	await getAndFormatResp(apiUrl, formatStockResults, slackUrl, req, res);
+	await getAndFormatResp(apiUrl, slackUrl, formatStockResults, req, res);
 };
 
 var cryptoAsync = async function(req, res) {
 	var cryptoReq = req.body.text;
-	var slackUrl = req.body.response_url;
+	var slackUrl = req.body.response_url || '';
 	var apiUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_INTRADAY&symbol=' + cryptoReq + '&market=USD&apikey=VVCZ3DAK6MZGR2XW'
 	
-	await getAndFormatResp(apiUrl, formatCryptoResults, slackUrl, req, res);
+	await getAndFormatResp(apiUrl, slackUrl, formatCryptoResults, req, res);
 };
 
 var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) {
@@ -33,7 +33,7 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	
 	try {
 		var task = request(options);
-		await snooze(1000);
+		await snooze(2000);
 		postToSlack(slackUrl, "{\"text\": \"Still going...\"}");
 		await snooze(1000);
 		postToSlack(slackUrl, "{\"text\": \"Still going...\"}");
@@ -48,12 +48,16 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	res.end();
 };
 
-var postToSlack = new function (slackUrl, msg) {
-	request.post({
-		json: true,
-		url: slackUrl,
-		body: msg
-	});
+var postToSlack = function (slackUrl, msg) {
+	if(slackUrl != '') {
+		request.post({
+			json: true,
+			url: slackUrl,
+			body: msg
+		});
+	} else {
+		console.log("No Slack URL - Trying to send \"" + msg + "\" - To: " + slackUrl);
+	}
 };
 
 function formatDate(date, offSetHours) {
