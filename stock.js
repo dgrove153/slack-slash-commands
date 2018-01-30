@@ -67,6 +67,7 @@ var postToSlack = function (slackUrl, useProxy, msg) {
 	if(slackUrl != '') {
 		reqSync.post(options, function(err, res){
 			if(err){console.log(err)}
+			if(res){console.log(res)}
 		});
 	} else {
 		console.log("No Slack URL - Trying to send \"" + msg + "\" - To: " + slackUrl);
