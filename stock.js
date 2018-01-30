@@ -1,44 +1,46 @@
 var request = require('request-promise');
+var reqSync = require('request');
 var json = require('JSON');
 
 const snooze = ms => new Promise(resolve => setTimeout(resolve, ms));
+const proxy = "http://cs41cb06pxy03.blackstone.com:8080"
 
 var stockAsync = async function(req, res) {
-	console.log(req.body);
 	var stockReq = req.body.text;
-	var slackUrl = req.body.response_url || '';
+	var slackUrl = req.body.response_url || 'https://hooks.slack.com/services/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';
 	var apiUrl = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + stockReq + '&interval=1min&apikey=VVCZ3DAK6MZGR2XW'
 	
 	await getAndFormatResp(apiUrl, slackUrl, formatStockResults, req, res);
 };
 
 var cryptoAsync = async function(req, res) {
-	console.log(req.body);
 	var cryptoReq = req.body.text;
-	var slackUrl = req.body.response_url || '';
+	var slackUrl = req.body.response_url || 'https://hooks.slack.com/services/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';
 	var apiUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_INTRADAY&symbol=' + cryptoReq + '&market=USD&apikey=VVCZ3DAK6MZGR2XW'
 	
 	await getAndFormatResp(apiUrl, slackUrl, formatCryptoResults, req, res);
 };
 
 var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) {
+	var useProxy = req.headers.host.indexOf("localhost") > -1;
+	
 	var options = {
 		uri: apiUrl
 	};
 	
-	if(req.headers.host.indexOf("localhost") > -1) {
-		options.proxy = "http://cs41cb06pxy03.blackstone.com:8080";
+	if(useProxy) {
+		options.proxy = proxy;
 	};
 	
 	res.setHeader("Content-type", "application/json");
 	
 	try {
-		postToSlack(slackUrl, "{\"text\": \"Starting...\"}");
+		postToSlack(slackUrl, useProxy, "{\"text\": \"Starting...\"}");
 		var task = request(options);
 		await snooze(2000);
-		postToSlack(slackUrl, "{\"text\": \"Still going...\"}");
+		postToSlack(slackUrl, useProxy, "{\"text\": \"Still going...\"}");
 		await snooze(1000);
-		postToSlack(slackUrl, "{\"text\": \"Still going...\"}");
+		postToSlack(slackUrl, useProxy, "{\"text\": \"Still going...\"}");
 		
 		var apiResp = await task;
 		var formatted = formatMethod(apiResp);
@@ -51,15 +53,20 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 	res.end();
 };
 
-var postToSlack = function (slackUrl, msg) {
-	console.log(msg);
-	console.log(JSON.stringify(msg));
+var postToSlack = function (slackUrl, useProxy, msg) {
+	var options = {
+		url: slackUrl,
+		form: {payload: JSON.stringify(msg)},
+		headers: {"Content-type": "application/json"}
+	};
+	
+	if(useProxy) {
+		options.proxy = proxy;
+	};
+	
 	if(slackUrl != '') {
-		request.post({
-			json: true,
-			headers = {"Content-type": "application/json"}
-			url: slackUrl,
-			body: JSON.stringify(msg)
+		reqSync.post(options, function(err, res){
+			if(err){console.log(err)}
 		});
 	} else {
 		console.log("No Slack URL - Trying to send \"" + msg + "\" - To: " + slackUrl);
