@@ -28,6 +28,7 @@ function formatDate(date, offSetHours) {
 
 app.post('/stock', function(req, res) {
 		var stockReq = req.body.text;
+		var test = req.body.response_url;
 		var apiUrl = 'https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=' + stockReq + '&interval=1min&apikey=VVCZ3DAK6MZGR2XW'
 		
 		var options = {
@@ -37,6 +38,9 @@ app.post('/stock', function(req, res) {
 		if(req.headers.host.indexOf("localhost") > -1) {
 			options.proxy = "http://cs41cb06pxy03.blackstone.com:8080";
 		};
+		
+		res.setHeader("Content-type", "application/json");
+		res.write("{\"text\": \"ok, got that\"}");
 		
 		request(options, function (error, response, body) {
 			 try {
@@ -81,11 +85,12 @@ app.post('/stock', function(req, res) {
 				}
 				
 				text += "} ]";
-
-				res.setHeader("Content-type", "application/json");
-				res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+				
+				res.write("{ \"response_type\": \"in_channel\"," + text + " }");
+				res.end();
 			 } catch (err) {
-				 res.send("Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator");
+				 res.write("{'text': 'Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator'}");
+				 res.end();
 				 console.log(err);
 			 }
 		});
@@ -102,6 +107,9 @@ app.post('/crypto', function(req, res) {
 		if(req.headers.host.indexOf("localhost") > -1) {
 			options.proxy = "http://cs41cb06pxy03.blackstone.com:8080";
 		};
+		
+		res.setHeader("Content-type", "application/json");
+		res.write("{\"text\": \"ok, got that\"}");
 		
 		request(options, function (error, response, body) {
 			 try {
@@ -152,10 +160,11 @@ app.post('/crypto', function(req, res) {
 				
 				text += "} ]";
 
-				res.setHeader("Content-type", "application/json");
-				res.send("{ \"response_type\": \"in_channel\"," + text + " }");
+				res.write("{ \"response_type\": \"in_channel\"," + text + " }");
+				res.end();
 			 } catch (err) {
-				 res.send("Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator");
+				 res.write("Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator");
+				 res.end();
 				 console.log(err);
 			 }
 		});
