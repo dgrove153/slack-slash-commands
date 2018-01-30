@@ -33,5 +33,7 @@ app.post('/stock', function (req, res) {
 });
 
 app.post('/crypto', function (req, res) {
-	stock.crypto(req, res)
+	(async () => {
+		stock.crypto(req, res)
+	})();
 });
