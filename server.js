@@ -15,8 +15,8 @@ var server = app.listen(app.get('port'), function () {
 		console.log('Example app listening at http://%s:%s', host, port);
 });
 
-function formatDate(date) {
-  var hours = date.getHours();
+function formatDate(date, offSetHours) {
+  var hours = date.getHours() - offSetHours;
   var minutes = date.getMinutes();
   var ampm = hours >= 12 ? 'pm' : 'am';
   hours = hours % 12;
@@ -35,7 +35,7 @@ app.post('/stock', function(req, res) {
 		};
 		
 		if(req.headers.host.indexOf("localhost") > -1) {
-			options.proxy = "http://cs41cb06pxy01.blackstone.com:8080";
+			options.proxy = "http://cs41cb06pxy03.blackstone.com:8080";
 		};
 		
 		request(options, function (error, response, body) {
@@ -71,13 +71,13 @@ app.post('/stock', function(req, res) {
 				resp.change = (close - open).toFixed(2);
 				resp.changePercent = (((close - open) / open)*100).toFixed(2);
 				
-				var formattedDate = formatDate(new Date(resp.time));
+				var formattedDate = formatDate(new Date(resp.time), 0);
 				
 				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
 				if(resp.changePercent < 0) {
-					text += ", \"color\": \"#f41f1f\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Price: " + resp.current + " | " + resp.change + " | " + resp.changePercent + "%\", \"value\":\"Last Updated: " + formattedDate + "\" } ]"
+					text += ", \"color\": \"#f41f1f\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Price: $" + resp.current + " | " + resp.change + " | " + resp.changePercent + "%\", \"value\":\"Last Updated: " + formattedDate + "\" } ]"
 				} else {
-					text += ", \"color\": \"#78f41f\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Price: " + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%\", \"value\":\"Last Updated: " + formattedDate + "\" } ]"
+					text += ", \"color\": \"#78f41f\", \"fields\":[ { \"title\":\"" + resp.symbol + " - Last Price: $" + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%\", \"value\":\"Last Updated: " + formattedDate + "\" } ]"
 				}
 				
 				text += "} ]";
@@ -93,25 +93,31 @@ app.post('/stock', function(req, res) {
 
 app.post('/crypto', function(req, res) {
 		var cryptoReq = req.body.text;
-		var apiUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol=' + cryptoReq + '&market=USD&apikey=VVCZ3DAK6MZGR2XW'
+		var apiUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_INTRADAY&symbol=' + cryptoReq + '&market=USD&apikey=VVCZ3DAK6MZGR2XW'
 		
 		var options = {
 			uri: apiUrl
 		};
 		
 		if(req.headers.host.indexOf("localhost") > -1) {
-			options.proxy = "http://cs41cb06pxy01.blackstone.com:8080";
+			options.proxy = "http://cs41cb06pxy03.blackstone.com:8080";
 		};
 		
 		request(options, function (error, response, body) {
 			 try {
 				var stock = JSON.parse(body);
-				var prices = stock['Time Series (Digital Currency Daily)'];
+				var prices = stock['Time Series (Digital Currency Intraday)'];
 				var index = [];
+
+				var today = new Date().getDate();
 
 				// build the index
 				for (var x in prices) {
-					index.push(x);
+					var date = new Date(x).toLocaleString();
+					var today = new Date(Date.now()).toLocaleString();
+					if(date.substring(0,9) === today.substring(0, 9)) {
+						index.push(x);
+					};
 				};
 
 				// sort the index
@@ -120,28 +126,29 @@ app.post('/crypto', function(req, res) {
 				}); 
 				
 				var resp = {};
-				resp.date = index[index.length-1];
-				var latest = prices[resp.date];
-				var open = latest['1a. open (USD)'];
-				var close = latest['4a. close (USD)'];
-				resp.high = parseFloat(latest['2a. high (USD)']).toFixed(2);
-				resp.low = parseFloat(latest['3a. low (USD)']).toFixed(2);
+				resp.time = index[index.length-1];
+				var latest = prices[resp.time];
+				var earliest = prices[index[0]];
+				var open = earliest['1b. price (USD)'];
+				var close = latest['1b. price (USD)'];
 				resp.symbol = stock['Meta Data']['2. Digital Currency Code'].toUpperCase();
 				resp.name = stock['Meta Data']['3. Digital Currency Name'];
 				resp.current = parseFloat(close).toFixed(2);
 				resp.change = (close - open).toFixed(2);
 				resp.changePercent = (((close - open) / open)*100).toFixed(2);
 				
+				var formattedDate = formatDate(new Date(resp.time), 5);
+				
 				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
 				if(resp.changePercent < 0) {
-					text += ", \"color\": \"#f41f1f\", \"fields\":[ { \"title\":\"" + resp.name + " (" + resp.symbol + ") to USD\", \"value\":\"Last Price: " + resp.current + " | " + resp.change + " | " + resp.changePercent + "%";
-					text += "\n Day High: " + resp.high + " | Day Low: " + resp.low;
+					text += ", \"color\": \"#f41f1f\", \"fields\":[ { \"title\":\"" + resp.name + " (" + resp.symbol + ") to USD\", \"value\":\"Last Price: $" + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%";
+					text += "\n Last Updated: " + formattedDate;
 					text += "\" } ]";
 				} else {
-					text += ", \"color\": \"#78f41f\", \"fields\":[ { \"title\":\"" + resp.name + " (" + resp.symbol + ") to USD\", \"value\":\"Last Price: " + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%";
-					text += "\n Day High: " + resp.high + " | Day Low: " + resp.low;
+					text += ", \"color\": \"#78f41f\", \"fields\":[ { \"title\":\"" + resp.name + " (" + resp.symbol + ") to USD\", \"value\":\"Last Price: $" + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%";
+					text += "\n Last Updated: " + formattedDate;
 					text += "\" } ]";
-				}
+				};
 				
 				text += "} ]";
 
