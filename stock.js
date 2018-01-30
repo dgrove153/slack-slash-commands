@@ -41,7 +41,8 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) 
 		postToSlack(slackUrl, useProxy, formatted);
 	} catch (err) {
 		var error = {"text":"Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator", "response_type":"ephemeral"};
-		postToSlack(slackUrl, useProxy, formatted);
+		error = JSON.stringify(error);
+		postToSlack(slackUrl, useProxy, error);
 		console.log(err);
 	};
 };
