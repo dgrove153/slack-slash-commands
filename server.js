@@ -1,6 +1,6 @@
 var app = require('./app');
 var bodyParser = require('body-parser');
-var winterns = require('./winterns');
+var randomCommands = require('./randomCommands');
 var stock = require('./stock');
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
@@ -15,15 +15,15 @@ var server = app.listen(app.get('port'), function () {
 });
 
 app.post('/google', function (req, res) {
-	winterns.google(req, res)
+	randomCommands.google(req, res)
 });
 
 app.post('/direction', function (req, res) {
-	winterns.direction(req, res)
+	randomCommands.direction(req, res)
 });
 
 app.post('/news', function (req, res) {
-	winterns.news(req, res)
+	randomCommands.news(req, res)
 });
 
 app.post('/stock', function (req, res) {
