@@ -224,10 +224,10 @@ var stockCNBC = function(req, res) {
 						stockInfo.current = e.content;
 						break;
 					case "change":
-						stockInfo.change = e.content;
+						stockInfo.change = e.content.replace('UNCH','0.0');
 						break;
 					case "change_pct":
-						stockInfo.changePercent = e.content;
+						stockInfo.changePercent = e.content.replace('UNCH','0.00%');
 				}
 			});
 			
