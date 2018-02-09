@@ -215,7 +215,7 @@ var stockCNBC = function(req, res) {
 						stockInfo.time = e.content;
 						break;
 					case "shortName":
-						stockInfo.symbol = e.content;
+						stockInfo.symbol = e.content.replace('&amp;','&');
 						break;
 					case "name":
 						stockInfo.name = e.content.replace('&amp;','&');
