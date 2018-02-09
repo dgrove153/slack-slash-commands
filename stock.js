@@ -182,7 +182,7 @@ var stockCNBC = function(req, res) {
 	var slackUrl = req.body.response_url || localSlackUri
 	var apiUrl = 'http://quote.cnbc.com/quote-html-webservice/quote.htm?symbols=' + stockReq +'&symbolType=symbol&requestMethod=itv&exthrs=1&extMode=&fund=1&skipcache=&extendedMask=1&partnerId=20051&noform=1'
 	res.setHeader("Content-type", "application/json");
-	
+	 		
 	var options = {
 		uri: apiUrl
 	};
@@ -228,18 +228,59 @@ var stockCNBC = function(req, res) {
 						break;
 					case "change_pct":
 						stockInfo.changePercent = e.content.replace('UNCH','0.00%');
+						break;
+					case "curmktstatus":
+						stockInfo.curmktstatus = e.content;
+						break;
+					case "type":
+						stockInfo.assetClass = e.content;
+						break;
+					case "ExtendedMktQuote": {
+					    var extended = e.children;
+					    extended.forEach(function(ex) {
+					        switch (ex.name) {
+					            case "last":
+					                stockInfo.extCurrent = ex.content;
+					                break;
+					            case "last_timedate":
+					                stockInfo.extTime = ex.content;
+					                break;
+					            case "change":
+					                stockInfo.extChange = ex.content;
+					                break;
+					            case "change_pct":
+					                stockInfo.extChangePercent = ex.content;
+					                break;
+					        }
+					    });
+					}
 				}
 			});
 			
-			if(parseFloat(stockInfo.change) < 0) {
-				attachment.color = "#f41f1f";
+			if (stockInfo.assetClass === "STOCK" && stockInfo.assetClass != "REG_MKT") {
+				if(parseFloat(stockInfo.extChange) < 0) {
+					attachment.color = "#f41f1f";
+				} else {
+					attachment.color = "#78f41f";
+				};
+				
+				var fields = {
+					title: "[EXTENDED HOURS] " + stockInfo.name + " (" + stockInfo.symbol + ") ",
+					value: "Last Price: $" + stockInfo.extCurrent + " | " + stockInfo.extChange + " | " + stockInfo.extChangePercent
+				};
+				
+				fields.value += "\n Last Updated: " + stockInfo.extTime;
 			} else {
-				attachment.color = "#78f41f";
-			};
-			
+				if(parseFloat(stockInfo.change) < 0) {
+					attachment.color = "#f41f1f";
+				} else {
+					attachment.color = "#78f41f";
+				};
+				
 			fields.title = stockInfo.name + " (" + stockInfo.symbol + ") ",
 			fields.value = "Last Price: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent			
-			fields.value += "\n Last Updated: " + stockInfo.time;
+				fields.value += "\n Last Updated: " + stockInfo.time;
+			};
 			
 			attachment.fields = [fields];
 			resp.attachments.push(attachment);
