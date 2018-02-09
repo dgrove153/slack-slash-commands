@@ -4,7 +4,7 @@ var randomCommands = require('./randomCommands');
 var stock = require('./stock');
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({ extended: false }));
 app.set('port', (process.env.PORT || 3000));
 
 var server = app.listen(app.get('port'), function () {
@@ -15,23 +15,28 @@ var server = app.listen(app.get('port'), function () {
 });
 
 app.post('/google', function (req, res) {
-	randomCommands.google(req, res)
+	randomCommands.google(req, res);
 });
 
 app.post('/direction', function (req, res) {
-	randomCommands.direction(req, res)
+	randomCommands.direction(req, res);
 });
 
 app.post('/news', function (req, res) {
-	randomCommands.news(req, res)
+	randomCommands.news(req, res);
 });
 
 app.post('/stock', function (req, res) {
-	res.send();
-	stock.stock(req, res)
+	// res.send();
+	// stock.stock(req, res);
+	stock.stockCNBC(req, res);
 });
 
 app.post('/crypto', function (req, res) {
 	res.send();
-	stock.crypto(req, res)
+	stock.crypto(req, res);
+});
+
+app.post('/stockcnbc', function (req, res) {
+	stock.stockCNBC(req, res);
 });
