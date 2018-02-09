@@ -252,7 +252,7 @@ var stockCNBC = function(req, res) {
 					                stockInfo.extChangePercent = ex.content;
 					                break;
 					        }
-					    })
+					    });
 					}
 				}
 			});
