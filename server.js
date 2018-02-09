@@ -27,9 +27,8 @@ app.post('/news', function (req, res) {
 });
 
 app.post('/stock', function (req, res) {
-	// res.send();
-	// stock.stock(req, res);
-	stock.stockCNBC(req, res);
+	res.send();
+	stock.stock(req, res);
 });
 
 app.post('/crypto', function (req, res) {
