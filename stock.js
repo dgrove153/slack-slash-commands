@@ -258,22 +258,14 @@ var stockCNBC = function(req, res) {
 			});
 			
 			if (stockInfo.assetClass === "STOCK" && stockInfo.assetClass != "REG_MKT") {
-				if(parseFloat(stockInfo.extChange) < 0) {
-					attachment.color = "#f41f1f";
-				} else {
-					attachment.color = "#78f41f";
-				};
+				attachment.color = parseFloat(stockInfo.extChange) < 0 ? "#f41f1f" : "#78f41f";
 
 				fields.title =  "[EXTENDED HOURS] " + stockInfo.name + " (" + stockInfo.symbol + ") ";
 				fields.value = "Last Price: $" + stockInfo.extCurrent + " | " + stockInfo.extChange + " | " + stockInfo.extChangePercent;
 				fields.value += "\n Last Updated: " + stockInfo.extTime;
 				
 			} else {
-				if(parseFloat(stockInfo.change) < 0) {
-					attachment.color = "#f41f1f";
-				} else {
-					attachment.color = "#78f41f";
-				};
+				attachment.color = parseFloat(stockInfo.change) < 0 ? "#f41f1f" : "#78f41f";
 				
 				fields.title = stockInfo.name + " (" + stockInfo.symbol + ") ";
 				fields.value = "Last Price: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent;		
