@@ -194,6 +194,10 @@ var stockCNBC = function(req, res) {
 		try {
 			var stockParsed = xml(body);
 			var stock = stockParsed.root.children[0].children;
+			if(!stock.length > 0) {
+				throw("No stock data");
+			};
+			
 			var stockInfo = {};
 			var resp = {};
 			
