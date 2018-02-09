@@ -260,7 +260,7 @@ var stockCNBC = function(req, res) {
 			if (stockInfo.assetClass === "STOCK" && stockInfo.assetClass != "REG_MKT") {
 				attachment.color = parseFloat(stockInfo.extChange) < 0 ? "#f41f1f" : "#78f41f";
 
-				fields.title =  "[EXTENDED HOURS] " + stockInfo.name + " (" + stockInfo.symbol + ") ";
+				fields.title =  ":clock4: " + stockInfo.name + " (" + stockInfo.symbol + ") ";
 				fields.value = "Last Price: $" + stockInfo.extCurrent + " | " + stockInfo.extChange + " | " + stockInfo.extChangePercent;
 				fields.value += "\n Last Updated: " + stockInfo.extTime;
 				
