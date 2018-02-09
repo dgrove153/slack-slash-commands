@@ -181,6 +181,7 @@ var stockCNBC = function(req, res) {
 	var stockReq = req.body.text;
 	var slackUrl = req.body.response_url || localSlackUri
 	var apiUrl = 'http://quote.cnbc.com/quote-html-webservice/quote.htm?symbols=' + stockReq +'&symbolType=symbol&requestMethod=itv&exthrs=1&extMode=&fund=1&skipcache=&extendedMask=1&partnerId=20051&noform=1'
+	res.setHeader("Content-type", "application/json");
 	 		
 	var options = {
 		uri: apiUrl
@@ -189,6 +190,14 @@ var stockCNBC = function(req, res) {
 	if(req.headers.host.indexOf("localhost") > -1) {
 		options.proxy = proxy;
 	};
+	
+	var resp = {};
+			
+	resp.attachments = [];
+	var attachment = {
+		fallback: "Slack Default"
+	};
+	var fields = {};
 	
 	request(options, function (error, response, body) {
 		try {
@@ -199,7 +208,6 @@ var stockCNBC = function(req, res) {
 			};
 			
 			var stockInfo = {};
-			var resp = {};
 			
 			stock.forEach(function(e) {
 				switch (e.name) {
@@ -207,19 +215,19 @@ var stockCNBC = function(req, res) {
 						stockInfo.time = e.content;
 						break;
 					case "shortName":
-						stockInfo.symbol = e.content;
+						stockInfo.symbol = e.content.replace('&amp;','&');
 						break;
 					case "name":
-						stockInfo.name = e.content;
+						stockInfo.name = e.content.replace('&amp;','&');
 						break;
 					case "last":
 						stockInfo.current = e.content;
 						break;
 					case "change":
-						stockInfo.change = e.content;
+						stockInfo.change = e.content.replace('UNCH','0.0');
 						break;
 					case "change_pct":
-						stockInfo.changePercent = e.content;
+						stockInfo.changePercent = e.content.replace('UNCH','0.00%');
 						break;
 					case "curmktstatus":
 						stockInfo.curmktstatus = e.content;
@@ -249,13 +257,6 @@ var stockCNBC = function(req, res) {
 				}
 			});
 			
-			resp.response_type = "in_channel";
-			
-			resp.attachments = [];
-			var attachment = {
-				fallback: "Slack Default"
-			};
-
 			if (stockInfo.assetClass === "STOCK" && stockInfo.assetClass != "REG_MKT") {
 				if(parseFloat(stockInfo.extChange) < 0) {
 					attachment.color = "#f41f1f";
@@ -276,25 +277,26 @@ var stockCNBC = function(req, res) {
 					attachment.color = "#78f41f";
 				};
 				
-				var fields = {
-					title: stockInfo.name + " (" + stockInfo.symbol + ") ",
-					value: "Last Price: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent
-				};
-				
+			fields.title = stockInfo.name + " (" + stockInfo.symbol + ") ",
+			fields.value = "Last Price: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent			
 				fields.value += "\n Last Updated: " + stockInfo.time;
 			};
 			
 			attachment.fields = [fields];
 			resp.attachments.push(attachment);
+			resp.response_type = "in_channel";
 			
-			res.setHeader("Content-type", "application/json");
 			res.send(JSON.stringify(resp));
 			console.log(JSON.stringify(resp));
 		} catch (err) {
-			var error = {"text":"Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator", "response_type":"ephemeral"};
-			error = JSON.stringify(error);
+			fields.value="Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator";
+			attachment.fields = [fields];
+			
+			resp.attachments.push(attachment);
+			resp.response_type = "ephemeral";
+			res.send(JSON.stringify(resp));
+			
 			console.log(err);
-			res.send(error);
 		}
 	});	
 }
