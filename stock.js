@@ -227,7 +227,7 @@ var stockCNBC = function(req, res) {
 					case "type":
 						stockInfo.assetClass = e.content;
 						break;
-					case "ExtendedMktQuote": {
+					case "ExtendedMktQuote": 
 					    var extended = e.children;
 					    extended.forEach(function(ex) {
 					        switch (ex.name) {
@@ -245,7 +245,7 @@ var stockCNBC = function(req, res) {
 					                break;
 					        }
 					    }
-					}
+					
 				}
 			});
 			
