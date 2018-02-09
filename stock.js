@@ -220,6 +220,32 @@ var stockCNBC = function(req, res) {
 						break;
 					case "change_pct":
 						stockInfo.changePercent = e.content;
+						break;
+					case "curmktstatus":
+						stockInfo.curmktstatus = e.content;
+						break;
+					case "type":
+						stockInfo.assetClass = e.content;
+						break;
+					case "ExtendedMktQuote": {
+					    var extended = e.children;
+					    extended.forEach(function(ex) {
+					        switch (ex.name) {
+					            case "last":
+					                stockInfo.extCurrent = ex.content;
+					                break;
+					            case "last_timedate":
+					                stockInfo.extTime = ex.content;
+					                break;
+					            case "change":
+					                stockInfo.extChange = ex.content;
+					                break;
+					            case "change_pct":
+					                stockInfo.extChangePercent = ex.content;
+					                break;
+					        }
+					    }
+					}
 				}
 			});
 			
@@ -229,19 +255,34 @@ var stockCNBC = function(req, res) {
 			var attachment = {
 				fallback: "Slack Default"
 			};
-			
-			if(parseFloat(stockInfo.change) < 0) {
-				attachment.color = "#f41f1f";
+
+			if (stockInfo.assetClass === "STOCK" && stockInfo.assetClass != "REG_MKT") {
+				if(parseFloat(stockInfo.extChange) < 0) {
+					attachment.color = "#f41f1f";
+				} else {
+					attachment.color = "#78f41f";
+				};
+				
+				var fields = {
+					title: "[EXTENDED HOURS] " + stockInfo.name + " (" + stockInfo.symbol + ") ",
+					value: "Last Price: $" + stockInfo.extCurrent + " | " + stockInfo.extChange + " | " + stockInfo.extChangePercent
+				};
+				
+				fields.value += "\n Last Updated: " + stockInfo.extTime;
 			} else {
-				attachment.color = "#78f41f";
+				if(parseFloat(stockInfo.change) < 0) {
+					attachment.color = "#f41f1f";
+				} else {
+					attachment.color = "#78f41f";
+				};
+				
+				var fields = {
+					title: stockInfo.name + " (" + stockInfo.symbol + ") ",
+					value: "Last Price: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent
+				};
+				
+				fields.value += "\n Last Updated: " + stockInfo.time;
 			};
-			
-			var fields = {
-				title: stockInfo.name + " (" + stockInfo.symbol + ") ",
-				value: "Last Price: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent
-			};
-			
-			fields.value += "\n Last Updated: " + stockInfo.time;
 			
 			attachment.fields = [fields];
 			resp.attachments.push(attachment);
