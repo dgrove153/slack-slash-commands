@@ -26,16 +26,12 @@ app.post('/news', function (req, res) {
 	randomCommands.news(req, res);
 });
 
-app.post('/stock', function (req, res) {
-	res.send();
-	stock.stock(req, res);
-});
-
 app.post('/crypto', function (req, res) {
 	res.send();
 	stock.crypto(req, res);
 });
 
 app.post('/stockcnbc', function (req, res) {
+	res.send();
 	stock.stockCNBC(req, res);
 });
