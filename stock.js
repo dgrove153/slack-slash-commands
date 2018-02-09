@@ -246,10 +246,10 @@ var stockCNBC = function(req, res) {
 					                stockInfo.extTime = ex.content;
 					                break;
 					            case "change":
-					                stockInfo.extChange = ex.content;
+					                stockInfo.extChange = ex.content.replace('UNCH','0.0');
 					                break;
 					            case "change_pct":
-					                stockInfo.extChangePercent = ex.content;
+					                stockInfo.extChangePercent = ex.content.replace('UNCH','0.00%');
 					                break;
 					        }
 					    });
