@@ -218,7 +218,7 @@ var stockCNBC = function(req, res) {
 						stockInfo.symbol = e.content;
 						break;
 					case "name":
-						stockInfo.name = e.content;
+						stockInfo.name = e.content.replace('&amp;','&');
 						break;
 					case "last":
 						stockInfo.current = e.content;
