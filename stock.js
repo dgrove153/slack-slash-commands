@@ -263,13 +263,11 @@ var stockCNBC = function(req, res) {
 				} else {
 					attachment.color = "#78f41f";
 				};
-				
-				var fields = {
-					title: "[EXTENDED HOURS] " + stockInfo.name + " (" + stockInfo.symbol + ") ",
-					value: "Last Price: $" + stockInfo.extCurrent + " | " + stockInfo.extChange + " | " + stockInfo.extChangePercent
-				};
-				
+
+				fields.title =  "[EXTENDED HOURS] " + stockInfo.name + " (" + stockInfo.symbol + ") ";
+				fields.value = "Last Price: $" + stockInfo.extCurrent + " | " + stockInfo.extChange + " | " + stockInfo.extChangePercent;
 				fields.value += "\n Last Updated: " + stockInfo.extTime;
+				
 			} else {
 				if(parseFloat(stockInfo.change) < 0) {
 					attachment.color = "#f41f1f";
@@ -277,8 +275,8 @@ var stockCNBC = function(req, res) {
 					attachment.color = "#78f41f";
 				};
 				
-			fields.title = stockInfo.name + " (" + stockInfo.symbol + ") ",
-			fields.value = "Last Price: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent			
+				fields.title = stockInfo.name + " (" + stockInfo.symbol + ") ";
+				fields.value = "Last Price: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent;		
 				fields.value += "\n Last Updated: " + stockInfo.time;
 			};
 			
