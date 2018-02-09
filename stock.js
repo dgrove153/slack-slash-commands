@@ -239,11 +239,12 @@ var stockCNBC = function(req, res) {
 			
 			fields.value += "\n Last Updated: " + stockInfo.time;
 			
-			attachment.fields = fields;
+			attachment.fields = [fields];
 			resp.attachments.push(attachment);
 			
 			res.setHeader("Content-type", "application/json");
 			res.send(JSON.stringify(resp));
+			console.log(JSON.stringify(resp));
 		} catch (err) {
 			var error = {"text":"Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator", "response_type":"ephemeral"};
 			error = JSON.stringify(error);
