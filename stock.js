@@ -101,7 +101,7 @@ var formatStockResults = function(apiResp) {
 				stockInfo.name = e.content.replace('&amp;','&');
 				break;
 			case "last":
-				stockInfo.current = e.content.toFixed(2);
+				stockInfo.current = parseFloat(e.content).toFixed(2);
 				break;
 			case "change":
 				stockInfo.change = e.content.replace('UNCH','0.0');
@@ -123,7 +123,7 @@ var formatStockResults = function(apiResp) {
 							stockInfo.extCurrent = ex.content;
 							break;
 						case "last_timedate":
-							stockInfo.extTime = ex.content.toFixed(2);
+							stockInfo.extTime = parseFloat(ex.content.toFixed(2));
 							break;
 						case "change":
 							stockInfo.extChange = ex.content.replace('UNCH','0.0');
