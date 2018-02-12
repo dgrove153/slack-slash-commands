@@ -31,11 +31,13 @@ app.post('/news', function (req, res) {
 });
 
 app.post('/crypto', function (req, res) {
+	res.setHeader("Content-type", "application/json");
 	res.send();
 	stock.crypto(req, res);
 });
 
 app.post('/stockcnbc', function (req, res) {
+	res.setHeader("Content-type", "application/json");
 	res.send();
 	stock.stockCNBC(req, res);
 });
