@@ -14,6 +14,10 @@ var server = app.listen(app.get('port'), function () {
 		console.log('Example app listening at http://%s:%s', host, port);
 });
 
+app.get('/', function(req, res) {
+	res.send('Brian\'s World');
+});
+
 app.post('/google', function (req, res) {
 	randomCommands.google(req, res);
 });
