@@ -137,7 +137,7 @@ var formatStockResults = function(apiResp) {
 		}
 	});
 	
-	if (stockInfo.assetClass === "STOCK" && stockInfo.assetClass != "REG_MKT") {
+	if (stockInfo.assetClass === "STOCK" && stockInfo.curmktstatus != "REG_MKT") {
 		attachment.color = parseFloat(stockInfo.extChange) < 0 ? "#f41f1f" : "#78f41f";
 
 		fields.title =  ":clock4: " + stockInfo.name + " (" + stockInfo.symbol + ") ";
