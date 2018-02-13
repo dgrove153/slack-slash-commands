@@ -142,14 +142,14 @@ var formatStockResults = function(apiResp) {
 
 		fields.title =  ":clock4: " + stockInfo.name + " (" + stockInfo.symbol + ") ";
 		fields.value = "Last Price: $" + stockInfo.extCurrent + " | " + stockInfo.extChange + " | " + stockInfo.extChangePercent;
-		fields.value += "\n Last Updated: " + stockInfo.extTime;
+		fields.value += "\nLast Updated: " + stockInfo.extTime;
 		
 	} else {
 		attachment.color = parseFloat(stockInfo.change) < 0 ? "#f41f1f" : "#78f41f";
 		
 		fields.title = stockInfo.name + " (" + stockInfo.symbol + ") ";
 		fields.value = "Last Price: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent;		
-		fields.value += "\n Last Updated: " + stockInfo.time;
+		fields.value += "\nLast Updated: " + stockInfo.time;
 	};
 	
 	attachment.fields = [fields];
@@ -198,11 +198,11 @@ var formatCryptoResults = function(apiResp) {
 	var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
 	if(resp.changePercent < 0) {
 		text += ", \"color\": \"#f41f1f\", \"fields\":[ { \"title\":\"" + resp.name + " (" + resp.symbol + ") to USD\", \"value\":\"Last Price: $" + resp.current + " | " + resp.change + " | " + resp.changePercent + "%";
-		text += "\n Last Updated: " + formattedDate;
+		text += "\nLast Updated: " + formattedDate;
 		text += "\" } ]";
 	} else {
 		text += ", \"color\": \"#78f41f\", \"fields\":[ { \"title\":\"" + resp.name + " (" + resp.symbol + ") to USD\", \"value\":\"Last Price: $" + resp.current + " | +" + resp.change + " | " + resp.changePercent + "%";
-		text += "\n Last Updated: " + formattedDate;
+		text += "\nLast Updated: " + formattedDate;
 		text += "\" } ]";
 	};
 
