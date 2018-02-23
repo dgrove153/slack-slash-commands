@@ -36,7 +36,7 @@ var formatDirectionResult = function(apiResponse) {
 
 	var endpoint = directions['results'][0]['geometry']['location'];
 	var address = directions['results'][0]['formatted_address'];
-	var bearing = bearing(endpoint, startpoint);
+	var bearing = Bearing(endpoint, startpoint);
 
 	fields.title = address;
 	fields.value = "Direction: " + cardinalDirection(bearing) + "\r\nBearing:  " + formatDegrees(bearing);
@@ -49,7 +49,7 @@ var formatDirectionResult = function(apiResponse) {
 	return JSON.stringify(resp);
 }
 
-var bearing = function(endpoint, startpoint) {
+var Bearing = function(endpoint, startpoint) {
     var x1 = endpoint.lat,
     y1 = endpoint.lng,
     x2 = startpoint.lat,
@@ -87,7 +87,7 @@ var cardinalDirection = function(bearing) {
 	var idx = Math.round((bearing + 11.25) / 22.5);
 	idx = (idx + 16) % 16;
 
-	coordNames[idx];
+	return coordNames[idx];
 }
 
 var formatDegrees = function(bearing) {
