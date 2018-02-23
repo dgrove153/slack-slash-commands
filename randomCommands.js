@@ -39,37 +39,6 @@ var google = function(req, res) {
 		});	
 };
 
-var direction = function(req, res) {
-		var calculateCityDistance = req.body.text;
-		var apiUrl = 'https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=601%Lexington%ave%NYC%NY&destinations='+ calculateCityDistance +'&key=AIzaSyCehJJ3gQeMG1N_CIl9vkCwHQN3RMEZnXo'
-
-		var options = {
-			uri: apiUrl
-		};
-
-		if(req.headers.host.indexOf("localhost") > -1) {
-			options.proxy = "http://cs41cb06pxy03.blackstone.com:8080";
-		};
-		
-		request(options, function (error, response, body) {
-			try {
-				var directions = JSON.parse(body);
-				var respo = {};
-				respo.distance = directions['rows'][0]['elements'][0]['distance']['text'];			 
-
-
-				var text  = "\"attachments\": [ {\"fallback\" : \"Slack Default\""; 
-				text += ", \"color\": \"#439FE0\", \"fields\":[ { \"title\":\"" + calculateCityDistance + "\", \"value\":\"Distance: " + respo.distance + "\" } ]"
-				text += "} ]";
-
-				res.setHeader("Content-type", "application/json");
-				res.send("{ \"response_type\": \"in_channel\"," + text + " }");
-			} catch (err) {
-				res.send("Incorrect input, please try again");
-			}
-		});
-};
-
 var news = function(req, res) {
 		var newsReq = req.body.text;
 		var apiUrl = 'https://newsapi.org/v2/everything?q=' + newsReq + '&language=en&sortBy=popularity&apiKey=8734dbf7115e4897b1e5b4553325633d'
@@ -112,6 +81,5 @@ var news = function(req, res) {
 
 module.exports = {
 	google: google,
-	direction: direction,
 	news: news
 };

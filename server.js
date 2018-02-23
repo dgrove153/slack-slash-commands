@@ -1,6 +1,7 @@
 var app = require('./app');
 var bodyParser = require('body-parser');
 var randomCommands = require('./randomCommands');
+var geocode = require('./geocode');
 var stock = require('./stock');
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies
@@ -23,7 +24,11 @@ app.post('/google', function (req, res) {
 });
 
 app.post('/direction', function (req, res) {
-	randomCommands.direction(req, res);
+	geocode.direction(req, res);
+});
+
+app.post('/distance', function (req, res) {
+	geocode.distance(req, res);
 });
 
 app.post('/news', function (req, res) {
