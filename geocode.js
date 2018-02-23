@@ -2,14 +2,14 @@ var request = require('request');
 var slackAPI = require('./slackAPI');
 var json = require('JSON');
 
-const localSlackUri = ""; //'https://hooks.slack.com/services/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';
+const localSlackUri = 'https://hooks.slack.com/services/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';
 
 var direction = async function(req, res) {
 		var calculateDirectionTo = req.body.text;
 		
 		var apiUrl = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + calculateDirectionTo + '&key=AIzaSyAX6qyCU78wobOyzxfzMp0Ixiop8_JiFqY'
 		
-		var slackUrl = ""; //req.body.response_url || localSlackUri
+		var slackUrl = req.body.response_url || localSlackUri;
 
 		await slackAPI.getAndFormatResp(apiUrl, slackUrl, formatDirectionResult, req);
 };
@@ -29,7 +29,7 @@ var formatDirectionResult = function(apiResponse) {
 	var fields = {};
 
 	var directions = JSON.parse(apiResponse);
-	console.log(directions);
+	
 	if (directions.results.length == 0) {
 		throw("No address found");
 	}
@@ -45,7 +45,7 @@ var formatDirectionResult = function(apiResponse) {
 	resp.attachments.push(attachment);
 	resp.response_type = "in_channel";
 	
-	console.log(JSON.stringify(resp));
+	//console.log(JSON.stringify(resp));
 	return JSON.stringify(resp);
 }
 
@@ -102,7 +102,7 @@ var formatDistanceResult = function(apiResponse) {
 	resp.attachments.push(attachment);
 	resp.response_type = "in_channel";
 	
-	console.log(JSON.stringify(resp));
+	//console.log(JSON.stringify(resp));
 	return JSON.stringify(resp);
 }
 

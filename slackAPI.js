@@ -1,7 +1,7 @@
 var reqSync = require('request');
 var request = require('request-promise');
 
-const proxy = "http://proxy.blackstone.com:8080"
+const proxy = "http://cs41cb06pxy03.blackstone.com:8080"
 
 var postToSlack = function (slackUrl, useProxy, payLoad) {
 	var webhook = slackUrl;
@@ -15,8 +15,6 @@ var postToSlack = function (slackUrl, useProxy, payLoad) {
 	if(useProxy) {
 		options.proxy = proxy;
 	};
-	
-	console.log(payLoad);
 	
 	reqSync.post(options, function(err, res){
 		if(err) {
@@ -41,13 +39,10 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req) {
 	
 	var slackPayload = {"text":"Keeping slack response alive...", "response_type":"ephemeral"};
 	slackPayload = JSON.stringify(slackPayload);
-	
-	console.log("Proxy:", options.proxy);
 
 	try {
 		var apiResp = await request(options);
 		var formatted = formatMethod(apiResp);
-		console.log(formatted);
 		postToSlack(slackUrl, useProxy, formatted);
 	} catch (err) {
 		var error = {"text":"Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator", "response_type":"ephemeral"};
