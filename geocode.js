@@ -36,10 +36,10 @@ var formatDirectionResult = function(apiResponse) {
 
 	var endpoint = directions['results'][0]['geometry']['location'];
 	var address = directions['results'][0]['formatted_address'];
-	var directionInfo = bearing(endpoint, startpoint);
+	var bearing = bearing(endpoint, startpoint);
 
 	fields.title = address;
-	fields.value = "Direction: " + directionInfo.degrees + " degrees clockwise from the North (" + directionInfo.bearingName + ")";
+	fields.value = "Direction: " + cardinalDirection(bearing) + "\r\nBearing:  " + formatDegrees(bearing);
 
 	attachment.fields = [fields];
 	resp.attachments.push(attachment);
@@ -57,19 +57,46 @@ var bearing = function(endpoint, startpoint) {
 
     var radians = Math.atan2((y1 - y2), (x1 - x2));
 
-    var compassReading = radians * (180 / Math.PI);
+    var compassReading = (radians * (180 / Math.PI) + 360) % 360;
 
-    var coordNames = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW", "N"];
-    var coordIndex = Math.round(compassReading / 22.5);
-    if (coordIndex < 0) {
-        coordIndex = coordIndex + 16
-    };
-
-    return {
-		bearingName: coordNames[coordIndex],
-		degrees: compassReading,
-	};
+    return compassReading;
 };
+
+var cardinalDirection = function(bearing) {
+	//const coordNames = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW", "N"];
+	const coordNames = [
+		"North",
+		"North-Northeast",
+		"Northeast",
+		"East-Northeast",
+		"East",
+		"East-Southeast",
+		"Southeast",
+		"South-Southeast",
+		"South",
+		"South-Southwest",
+		"Southwest",
+		"West-Southwest",
+		"West",
+		"West-Northwest",
+		"Northwest",
+		"North-Northwest",
+		"North"
+	];
+
+	var idx = Math.round((bearing + 11.25) / 22.5);
+	idx = (idx + 16) % 16;
+
+	coordNames[idx];
+}
+
+var formatDegrees = function(bearing) {
+	var degrees = Math.floor(bearing),
+		minutes = Math.floor(60 * (bearing - degrees)),
+		seconds = 3600 * (bearing - degrees) - 60 * minutes;
+
+	return degrees.toString() + "° " + minutes + "′ " + seconds.toFixed(3) + "″";
+}
 
 var distance = async function(req, res) {
 		var calculateCityDistance = req.body.text;
