@@ -96,7 +96,7 @@ var formatDistanceResult = function(apiResponse) {
 	}
 	var destination = distance.destination_addresses[0];
 	fields.title = destination;
-	fields.value = "Distance: " + directions['rows'][0]['elements'][0]['distance']['text'];;
+	fields.value = "Distance: " + distance['rows'][0]['elements'][0]['distance']['text'];;
 
 	attachment.fields = [fields];
 	resp.attachments.push(attachment);

@@ -24,10 +24,14 @@ app.post('/google', function (req, res) {
 });
 
 app.post('/direction', function (req, res) {
+	res.setHeader("Content-type", "application/json");
+	res.send({"response_type": "in_channel"});
 	geocode.direction(req, res);
 });
 
 app.post('/distance', function (req, res) {
+	res.setHeader("Content-type", "application/json");
+	res.send({"response_type": "in_channel"});
 	geocode.distance(req, res);
 });
 
