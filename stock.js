@@ -1,6 +1,5 @@
-var request = require('request-promise');
-var reqSync = require('request');
 var json = require('JSON');
+var slackAPI = require('./slackAPI');
 var xml = require('xml-parser');
 
 const proxy = "http://cs41cb06pxy03.blackstone.com:8080"
@@ -12,7 +11,7 @@ var stockCNBCAsync = async function(req, res) {
 		var slackUrl = req.body.response_url || localSlackUri
 		var apiUrl = 'http://quote.cnbc.com/quote-html-webservice/quote.htm?symbols=' + e +'&symbolType=symbol&requestMethod=itv&exthrs=1&extMode=&fund=1&skipcache=&extendedMask=1&partnerId=20051&noform=1';
 		
-		await getAndFormatResp(apiUrl, slackUrl, formatStockResults, req, res);
+		await slackAPI.getAndFormatResp(apiUrl, slackUrl, formatStockResults, req, res);
 	});
 };
 
@@ -21,55 +20,9 @@ var cryptoAsync = async function(req, res) {
 	var slackUrl = req.body.response_url || localSlackUri
 	var apiUrl = 'https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_INTRADAY&symbol=' + cryptoReq + '&market=USD&apikey=VVCZ3DAK6MZGR2XW'
 	
-	await getAndFormatResp(apiUrl, slackUrl, formatCryptoResults, req, res);
+	await slackAPI.getAndFormatResp(apiUrl, slackUrl, formatCryptoResults, req, res);
 };
 
-var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res) {
-	var useProxy = req.headers.host.indexOf("localhost") > -1;
-	
-	var options = {
-		uri: apiUrl
-	};
-	
-	if(useProxy) {
-		options.proxy = proxy;
-	};
-	
-	var slackPayload = {"text":"Keeping slack response alive...", "response_type":"ephemeral"};
-	slackPayload = JSON.stringify(slackPayload);
-	
-	try {
-		var apiResp = await request(options);
-		var formatted = formatMethod(apiResp);
-		postToSlack(slackUrl, useProxy, formatted);
-	} catch (err) {
-		var error = {"text":"Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator", "response_type":"ephemeral"};
-		error = JSON.stringify(error);
-		postToSlack(slackUrl, useProxy, error);
-		console.log(err);
-	};
-};
-
-var postToSlack = function (slackUrl, useProxy, payLoad) {
-	var webhook = slackUrl;
-	var headers = {"Content-type": "application/json"};
-	var options = {
-		uri: webhook,
-		form: {payload: payLoad},
-		headers: headers
-	};
-	
-	if(useProxy) {
-		options.proxy = proxy;
-	};
-	
-	console.log(payLoad);
-	
-	reqSync.post(options, function(err, res){
-		if(err){console.log(err)}
-		if(res){console.log(res.body)}
-	});
-};
 
 
 var formatStockResults = function(apiResp) {
