@@ -84,7 +84,7 @@ var cardinalDirection = function(bearing) {
 		"North"
 	];
 
-	var idx = Math.round((bearing + 11.25) / 22.5);
+	var idx = Math.round(bearing / 22.5);
 	idx = (idx + 16) % 16;
 
 	return coordNames[idx];
