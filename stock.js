@@ -92,10 +92,18 @@ var formatStockResults = function(apiResp) {
 	
 	if (stockInfo.assetClass === "STOCK" && stockInfo.curmktstatus != "REG_MKT") {
 		attachment.color = parseFloat(stockInfo.extChange) < 0 ? "#f41f1f" : "#78f41f";
+		if (parseFloat(stockInfo.Change) > 0) {
+			var marketCloseIndicator = ":green_arrow_up:";
+		} else if (parseFloat(stockInfo.Change) < 0) {
+			var marketCloseIndicator = ":red_arrow_down:";
+		} else {
+			var marketCloseIndicator = "";
+		}
 
 		fields.title =  ":clock4: " + stockInfo.name + " (" + stockInfo.symbol + ") ";
 		fields.value = "Last Price: $" + stockInfo.extCurrent + " | " + stockInfo.extChange + " | " + stockInfo.extChangePercent;
 		fields.value += "\nLast Updated: " + stockInfo.extTime;
+		fields.value += "\n" + marketCloseIndicator + " Market Close: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent;
 		
 	} else {
 		attachment.color = parseFloat(stockInfo.change) < 0 ? "#f41f1f" : "#78f41f";
