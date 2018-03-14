@@ -91,8 +91,10 @@ var formatStockResults = function(apiResp) {
 	});
 	
 	if (stockInfo.assetClass === "STOCK" && stockInfo.curmktstatus != "REG_MKT") {
-		attachment.color = parseFloat(stockInfo.extChange) < 0 ? "#f41f1f" : "#78f41f";
-		var marketCloseIndicator = parseFloat(stockInfo.change) < 0 ? ":red_arrow_down:" : ":green_arrow_up:";
+		var extChange = parseFloat(stockInfo.extChange);
+		var change = parseFloat(stockInfo.change);
+		attachment.color = extChange < 0 ? "#f41f1f" : extChange == 0 ? "#66ccff" : "#78f41f";
+		var marketCloseIndicator = change < 0 ? ":red_arrow_down:" : change == 0 ? "" : ":green_arrow_up:";
 
 		fields.title =  ":clock4: " + stockInfo.name + " (" + stockInfo.symbol + ") ";
 		fields.value = "Last Price: $" + stockInfo.extCurrent + " | " + stockInfo.extChange + " | " + stockInfo.extChangePercent;
