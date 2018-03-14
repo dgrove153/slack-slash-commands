@@ -92,12 +92,11 @@ var formatStockResults = function(apiResp) {
 	
 	if (stockInfo.assetClass === "STOCK" && stockInfo.curmktstatus != "REG_MKT") {
 		attachment.color = parseFloat(stockInfo.extChange) < 0 ? "#f41f1f" : "#78f41f";
+		var marketCloseIndicator = "";
 		if (parseFloat(stockInfo.change) > 0) {
-			var marketCloseIndicator = ":green_arrow_up:";
+			marketCloseIndicator = ":green_arrow_up:";
 		} else if (parseFloat(stockInfo.change) < 0) {
-			var marketCloseIndicator = ":red_arrow_down:";
-		} else {
-			var marketCloseIndicator = "";
+			marketCloseIndicator = ":red_arrow_down:";
 		}
 
 		fields.title =  ":clock4: " + stockInfo.name + " (" + stockInfo.symbol + ") ";
