@@ -92,13 +92,7 @@ var formatStockResults = function(apiResp) {
 	
 	if (stockInfo.assetClass === "STOCK" && stockInfo.curmktstatus != "REG_MKT") {
 		attachment.color = parseFloat(stockInfo.extChange) < 0 ? "#f41f1f" : "#78f41f";
-		if (parseFloat(stockInfo.change) > 0) {
-			var marketCloseIndicator = ":green_arrow_up:";
-		} else if (parseFloat(stockInfo.change) < 0) {
-			var marketCloseIndicator = ":red_arrow_down:";
-		} else {
-			var marketCloseIndicator = "";
-		}
+		var marketCloseIndicator = parseFloat(stockInfo.change) < 0 ? ":red_arrow_down:" : ":green_arrow_up:";
 
 		fields.title =  ":clock4: " + stockInfo.name + " (" + stockInfo.symbol + ") ";
 		fields.value = "Last Price: $" + stockInfo.extCurrent + " | " + stockInfo.extChange + " | " + stockInfo.extChangePercent;
