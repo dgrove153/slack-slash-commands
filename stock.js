@@ -6,7 +6,11 @@ const proxy = "http://cs41cb06pxy03.blackstone.com:8080"
 const localSlackUri = 'https://hooks.slack.com/services/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';
 
 var stockCNBCAsync = async function(req, res) {
-	var stockReqs = req.body.text.split(" ");
+	var inputString = req.body.text;
+	if(inputString == "all") {
+		inputString = "fb aapl snap amzn sq tsla evh wtr ua";
+	};
+	var stockReqs = inputString.split(" ");
 	stockReqs.forEach(async function(e) { 
 		var slackUrl = req.body.response_url || localSlackUri
 		var apiUrl = 'http://quote.cnbc.com/quote-html-webservice/quote.htm?symbols=' + e +'&symbolType=symbol&requestMethod=itv&exthrs=1&extMode=&fund=1&skipcache=&extendedMask=1&partnerId=20051&noform=1';
