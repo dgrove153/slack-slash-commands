@@ -8,7 +8,7 @@ const localSlackUri = 'https://hooks.slack.com/services/T044B8KF7/B0ELFNAEB/L6Xb
 var stockCNBCAsync = async function(req, res) {
 	var inputString = req.body.text;
 	if(inputString == "all") {
-		inputString = "fb aapl snap amzn sq tsla evh wtr ua";
+		inputString = "fb aapl snap amzn sq tsla evh wtr ua cmcsa";
 	};
 	var stockReqs = inputString.split(" ");
 	stockReqs.forEach(async function(e) { 
@@ -97,7 +97,7 @@ var formatStockResults = function(apiResp) {
 	if (stockInfo.assetClass === "STOCK" && stockInfo.curmktstatus != "REG_MKT") {
 		var extChange = parseFloat(stockInfo.extChange);
 		var change = parseFloat(stockInfo.change);
-		attachment.color = extChange < 0 ? "#f41f1f" : extChange == 0 ? "#66ccff" : "#78f41f";
+		attachment.color = extChange < 0 ? "#f41f1f" : extChange == 0 ? "#909494" : "#78f41f";
 		var marketCloseIndicator = change < 0 ? ":red_arrow_down:" : change == 0 ? "" : ":green_arrow_up:";
 
 		fields.title =  ":clock4: " + stockInfo.name + " (" + stockInfo.symbol + ") ";
