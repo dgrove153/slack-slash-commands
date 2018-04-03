@@ -8,7 +8,7 @@ var postToSlack = function (slackUrl, useProxy, payLoad) {
 	var headers = { "Content-type": "application/json" };
 	var options = {
 		uri: webhook,
-		form: { payload: payLoad },
+		form: { payload: JSON.stringify(payLoad) },
 		headers: headers
     };
 	
@@ -16,17 +16,19 @@ var postToSlack = function (slackUrl, useProxy, payLoad) {
 		options.proxy = proxy;
 	};
 	
-	reqSync.post(options, function(err, res){
-		if(err) {
-            console.log(err)
-        }
-		if(res) {
-            console.log(res.body)
-        }
-	});
+	if(!payLoad.filter) {
+		reqSync.post(options, function(err, res){
+			if(err) {
+				console.log(err)
+			}
+			if(res) {
+				console.log(res.body)
+			}
+		});
+	};
 };
 
-var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req) {
+var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res, filter) {
 	var useProxy = req.headers.host.indexOf("localhost") > -1;
 	
 	var options = {
@@ -42,7 +44,7 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req) {
 
 	try {
 		var apiResp = await request(options);
-		var formatted = formatMethod(apiResp);
+		var formatted = formatMethod(apiResp, filter);
 		postToSlack(slackUrl, useProxy, formatted);
 	} catch (err) {
 		var error = {"text":"Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator", "response_type":"ephemeral"};

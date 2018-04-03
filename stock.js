@@ -7,7 +7,9 @@ const localSlackUri = 'https://hooks.slack.com/services/T044B8KF7/B0ELFNAEB/L6Xb
 
 var stockCNBCAsync = async function(req, res) {
 	var inputString = req.body.text;
-	if(inputString == "all") {
+	var filter = createFilter(inputString);
+	
+	if(inputString == "all" || inputString == "hot") {
 		inputString = "fb aapl snap amzn sq tsla evh wtr ua";
 	};
 	var stockReqs = inputString.split(" ");
@@ -15,7 +17,7 @@ var stockCNBCAsync = async function(req, res) {
 		var slackUrl = req.body.response_url || localSlackUri
 		var apiUrl = 'http://quote.cnbc.com/quote-html-webservice/quote.htm?symbols=' + e +'&symbolType=symbol&requestMethod=itv&exthrs=1&extMode=&fund=1&skipcache=&extendedMask=1&partnerId=20051&noform=1';
 		
-		await slackAPI.getAndFormatResp(apiUrl, slackUrl, formatStockResults, req, res);
+		await slackAPI.getAndFormatResp(apiUrl, slackUrl, formatStockResults, req, res, filter);
 	});
 };
 
@@ -27,9 +29,17 @@ var cryptoAsync = async function(req, res) {
 	await slackAPI.getAndFormatResp(apiUrl, slackUrl, formatCryptoResults, req, res);
 };
 
+var createFilter = function(input) {
+	var filter = {};
+	
+	if(input == "hot") {
+		filter.minChange = 1;
+	};
+	
+	return filter;
+};
 
-
-var formatStockResults = function(apiResp) {
+var formatStockResults = function(apiResp, filter) {
 	var resp = {};
 			
 	resp.attachments = [];
@@ -117,8 +127,9 @@ var formatStockResults = function(apiResp) {
 	resp.attachments.push(attachment);
 	resp.response_type = "in_channel";
 	
-	console.log(JSON.stringify(resp));
-	return JSON.stringify(resp);
+	resp.filter = Math.abs(parseFloat(stockInfo.changePercent)) < filter.minChange;
+	
+	return resp;
 }
 
 var formatCryptoResults = function(apiResp) {
