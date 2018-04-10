@@ -46,7 +46,7 @@ var formatDirectionResult = function(apiResponse) {
 	resp.response_type = "in_channel";
 	
 	//console.log(JSON.stringify(resp));
-	return JSON.stringify(resp);
+	return resp;
 }
 
 var Bearing = function(endpoint, startpoint) {
@@ -130,7 +130,7 @@ var formatDistanceResult = function(apiResponse) {
 	resp.response_type = "in_channel";
 	
 	//console.log(JSON.stringify(resp));
-	return JSON.stringify(resp);
+	return resp;
 }
 
 
