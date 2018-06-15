@@ -9,7 +9,7 @@ var stockCNBCAsync = async function(req, res) {
 	var inputString = req.body.text;
 	var filter = createFilter(inputString);
 	
-	if(inputString == "all" || inputString == "hot") {
+	if(inputString == "all" || inputString == "hot" || inputString == "shit") {
 		inputString = ".djia .spx fb aapl snap amzn sq tsla evh wtr ua cmcsa amd jpm googl txmd";
 	};
 	var stockReqs = inputString.split(" ");
@@ -34,6 +34,9 @@ var createFilter = function(input) {
 	
 	if(input == "hot") {
 		filter.minChange = 1;
+	};
+	else if (input == "shit") {
+		filter.lessThan = 0;	
 	};
 	
 	return filter;
@@ -126,8 +129,14 @@ var formatStockResults = function(apiResp, filter) {
 	attachment.fields = [fields];
 	resp.attachments.push(attachment);
 	resp.response_type = "in_channel";
+	resp.filter = false;
 	
-	resp.filter = Math.abs(parseFloat(stockInfo.changePercent)) < filter.minChange;
+	if(filter.minChange) {
+		resp.filter = resp.filter || Math.abs(parseFloat(stockInfo.changePercent)) < filter.minChange;
+	};
+	if(filter.lessThan) {
+		resp.filter = resp.filter || stockInfo.change >= filter.lessThan || stockInfo.extChange >= filter.lessThan;
+	};
 	
 	return resp;
 }
