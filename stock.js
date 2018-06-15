@@ -131,10 +131,10 @@ var formatStockResults = function(apiResp, filter) {
 	resp.response_type = "in_channel";
 	resp.filter = false;
 	
-	if(filter.minChange) {
+	if(filter.hasOwnProperty('minChange')) {
 		resp.filter = resp.filter || Math.abs(parseFloat(stockInfo.changePercent)) < filter.minChange;
 	};
-	if(filter.lessThan) {
+	if(filter.hasOwnProperty('lessThan')) {
 		resp.filter = resp.filter || parseFloat(stockInfo.change) >= filter.lessThan;
 	};
 	
