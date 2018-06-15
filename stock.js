@@ -135,7 +135,7 @@ var formatStockResults = function(apiResp, filter) {
 		resp.filter = resp.filter || Math.abs(parseFloat(stockInfo.changePercent)) < filter.minChange;
 	};
 	if(filter.lessThan) {
-		resp.filter = resp.filter || parseFloat(stockInfo.change) >= filter.lessThan || parseFloat(stockInfo.extChange) >= filter.lessThan;
+		resp.filter = resp.filter || parseFloat(stockInfo.change) >= filter.lessThan;
 	};
 	
 	return resp;
