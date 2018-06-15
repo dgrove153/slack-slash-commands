@@ -35,7 +35,7 @@ var createFilter = function(input) {
 	if(input == "hot") {
 		filter.minChange = 1;
 	};
-	else if (input == "shit") {
+	if (input == "shit") {
 		filter.lessThan = 0;	
 	};
 	
