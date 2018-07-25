@@ -11,7 +11,10 @@ var stockCNBCAsync = async function(req, res) {
 	
 	if(inputString == "all" || inputString == "hot" || inputString == "shit") {
 		inputString = ".spx fb aapl snap amzn sq evh wtr ua amd googl txmd dbx";
+	} else if (inputString == "jef") {
+		inputString = "sq snap jpm cmcsa fb ua dbx";
 	};
+	
 	var stockReqs = inputString.split(" ");
 	stockReqs.forEach(async function(e) { 
 		var slackUrl = req.body.response_url || localSlackUri
