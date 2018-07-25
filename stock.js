@@ -10,7 +10,7 @@ var stockCNBCAsync = async function(req, res) {
 	var filter = createFilter(inputString);
 	
 	if(inputString == "all" || inputString == "hot" || inputString == "shit") {
-		inputString = ".djia .spx fb aapl snap amzn sq tsla evh wtr ua cmcsa amd jpm googl txmd dbx";
+		inputString = ".spx fb aapl snap amzn sq evh wtr ua amd googl txmd dbx";
 	};
 	var stockReqs = inputString.split(" ");
 	stockReqs.forEach(async function(e) { 
