@@ -13,6 +13,12 @@ var stockCNBCAsync = async function(req, res) {
 		inputString = ".spx fb aapl snap amzn sq evh wtr ua amd googl txmd dbx";
 	} else if (inputString == "jef") {
 		inputString = "sq snap jpm cmcsa fb ua dbx";
+	} else if (inputString == "ari") {
+		inputString = "sq ua txmd googl";
+	} else if (inputString == "brn") {
+		inputString = "wtr";
+	} else if (inputString == "drn") {
+		inputString = "fb amzn evh amd nvda";
 	};
 	
 	var stockReqs = inputString.split(" ");
