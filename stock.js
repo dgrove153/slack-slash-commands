@@ -12,11 +12,11 @@ var stockCNBCAsync = async function(req, res) {
 	if(inputString == "all" || inputString == "hot" || inputString == "shit") {
 		inputString = ".spx fb aapl snap amzn sq evh wtr ua amd googl txmd dbx";
 	} else if (inputString == "jef") {
-		inputString = "sq snap jpm cmcsa fb ua dbx";
+		inputString = "sq dbx fb ua snap xes amzn googl jpm ivv vxus";
 	} else if (inputString == "ari") {
 		inputString = "sq ua txmd googl";
 	} else if (inputString == "brn") {
-		inputString = "wtr";
+		inputString = "wtr cvx aapl";
 	} else if (inputString == "drn") {
 		inputString = "fb amzn evh amd nvda";
 	};
