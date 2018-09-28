@@ -142,13 +142,13 @@ var formatStockResults = function(apiResp, filter, requestData) {
 		attachment.color = "#000000";
 		fields.title = stockInfo.symbol + " is not a valid symbol";
 		var nickname = "";
-		if (requestData.user_name = "irabulog") {
+		if (requestData.user_name === "irabulog") {
 			nickname = "ira"
-		} else if (requestData.user_name = "bsnaxx") {
+		} else if (requestData.user_name === "bsnaxx") {
 			nickname = "brn"
-		} else if (requestData.user_name = "dgrove153") {
+		} else if (requestData.user_name === "dgrove153") {
 			nickname = "drn"
-		} else if (requestData.user_name = "j3ff") {
+		} else if (requestData.user_name === "j3ff") {
 			nickname = "jef"
 		} else {
 			nickname = requestData.user_name;
