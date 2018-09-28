@@ -73,8 +73,11 @@ var formatStockResults = function(apiResp, filter) {
 			case "last_timedate":
 				stockInfo.time = e.content;
 				break;
-			case "shortName":
+			case "symbol":
 				stockInfo.symbol = e.content.replace('&amp;','&');
+				break;
+			case "shortName":
+				stockInfo.shortName = e.content.replace('&amp;','&');
 				break;
 			case "name":
 				stockInfo.name = e.content.replace('&amp;','&');
@@ -122,7 +125,7 @@ var formatStockResults = function(apiResp, filter) {
 		attachment.color = extChange < 0 ? "#f41f1f" : extChange == 0 ? "#909494" : "#78f41f";
 		var marketCloseIndicator = change < 0 ? ":red_arrow_down:" : change == 0 ? "" : ":green_arrow_up:";
 
-		fields.title =  ":clock4: " + stockInfo.name + " (" + stockInfo.symbol + ") ";
+		fields.title =  ":clock4: " + stockInfo.name + " (" + stockInfo.shortName + ") ";
 		fields.value = "Last Price: $" + stockInfo.extCurrent + " | " + stockInfo.extChange + " | " + stockInfo.extChangePercent;
 		fields.value += "\nLast Updated: " + stockInfo.extTime;
 		fields.value += "\n" + marketCloseIndicator + " Market Close: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent;
@@ -131,7 +134,7 @@ var formatStockResults = function(apiResp, filter) {
 		var change = parseFloat(stockInfo.change);
 		attachment.color = change < 0 ? "#f41f1f" : change == 0 ? "#909494" : "#78f41f";
 		
-		fields.title = stockInfo.name + " (" + stockInfo.symbol + ") ";
+		fields.title = stockInfo.name + " (" + stockInfo.shortName + ") ";
 		fields.value = "Last Price: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent;		
 		fields.value += "\nLast Updated: " + stockInfo.time;
 
