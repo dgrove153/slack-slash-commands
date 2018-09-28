@@ -51,7 +51,7 @@ var createFilter = function(input) {
 	return filter;
 };
 
-var formatStockResults = function(apiResp, filter) {
+var formatStockResults = function(apiResp, filter, requestData) {
 	var resp = {};
 			
 	resp.attachments = [];
@@ -141,7 +141,7 @@ var formatStockResults = function(apiResp, filter) {
 	} else {
 		attachment.color = "#000000";
 		fields.title = stockInfo.symbol + " is not a valid symbol";
-		fields.value = "Brn pls";
+		fields.value = requestData.user_name + " pls";
 	};
 	
 	attachment.fields = [fields];

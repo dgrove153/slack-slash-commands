@@ -44,7 +44,7 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res, 
 
 	try {
 		var apiResp = await request(options);
-		var formatted = formatMethod(apiResp, filter);
+		var formatted = formatMethod(apiResp, filter, req.body);
 		postToSlack(slackUrl, useProxy, formatted);
 	} catch (err) {
 		var error = {"text":"Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator", "response_type":"ephemeral"};
