@@ -127,12 +127,18 @@ var formatStockResults = function(apiResp, filter) {
 		fields.value += "\nLast Updated: " + stockInfo.extTime;
 		fields.value += "\n" + marketCloseIndicator + " Market Close: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent;
 		
-	} else {
-		attachment.color = parseFloat(stockInfo.change) < 0 ? "#f41f1f" : "#78f41f";
+	} else if (typeof stockInfo.assetClass != 'undefined') {
+		var change = parseFloat(stockInfo.change);
+		attachment.color = change < 0 ? "#f41f1f" : change == 0 ? "#909494" : "#78f41f";
 		
 		fields.title = stockInfo.name + " (" + stockInfo.symbol + ") ";
 		fields.value = "Last Price: $" + stockInfo.current + " | " + stockInfo.change + " | " + stockInfo.changePercent;		
 		fields.value += "\nLast Updated: " + stockInfo.time;
+
+	} else {
+		attachment.color = "#000000";
+		fields.title = stockInfo.symbol + " is not a valid symbol";
+		fields.value = "Brn pls";
 	};
 	
 	attachment.fields = [fields];
