@@ -140,20 +140,20 @@ var formatStockResults = function(apiResp, filter, requestData) {
 
 	} else {
 		attachment.color = "#000000";
-		fields.title = stockInfo.symbol + " is not a valid symbol";
 		var nickname = "";
 		if (requestData.user_name === "irabulog") {
-			nickname = "ira"
+			nickname = "IRA"
 		} else if (requestData.user_name === "bsnaxx") {
-			nickname = "brn"
+			nickname = "BRN"
 		} else if (requestData.user_name === "dgrove153") {
-			nickname = "drn"
+			nickname = "DRN"
 		} else if (requestData.user_name === "j3ff") {
-			nickname = "jef"
+			nickname = "JEF"
 		} else {
 			nickname = requestData.user_name;
 		}
-		fields.value = nickname + " pls";
+		fields.title = nickname + " PLS";
+		fields.value = stockInfo.symbol + " is not a valid symbol. Pls.";
 	};
 	
 	attachment.fields = [fields];
