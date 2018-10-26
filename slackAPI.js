@@ -3,7 +3,11 @@ var request = require('request-promise');
 
 const proxy = "http://cs41cb06pxy03.blackstone.com:8080"
 
-var postToSlack = function (slackUrl, useProxy, payLoad) {
+var useProxy = function(req) {
+	return req.headers.host.indexOf("localhost") > -1;
+}
+
+var postToSlack = function (slackUrl, payLoad) {
 	var webhook = slackUrl;
 	var headers = { "Content-type": "application/json" };
 	var options = {
@@ -12,7 +16,7 @@ var postToSlack = function (slackUrl, useProxy, payLoad) {
 		headers: headers
     };
 	
-	if(useProxy) {
+	if(useProxy()) {
 		options.proxy = proxy;
 	};
 	
@@ -25,17 +29,19 @@ var postToSlack = function (slackUrl, useProxy, payLoad) {
 				console.log(res.body)
 			}
 		});
+		
+		return true;
+	} else {
+		return false;
 	};
 };
 
 var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res, filter) {
-	var useProxy = req.headers.host.indexOf("localhost") > -1;
-	
 	var options = {
 		uri: apiUrl
 	};
 	
-	if(useProxy) {
+	if(useProxy()) {
 		options.proxy = proxy;
 	};
 	
@@ -45,16 +51,23 @@ var getAndFormatResp = async function(apiUrl, slackUrl, formatMethod, req, res, 
 	try {
 		var apiResp = await request(options);
 		var formatted = formatMethod(apiResp, filter, req.body);
-		postToSlack(slackUrl, useProxy, formatted);
+		return postToSlack(slackUrl, formatted);
 	} catch (err) {
-		var error = {"text":"Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator", "response_type":"ephemeral"};
-		error = JSON.stringify(error);
-		postToSlack(slackUrl, useProxy, error);
-		console.log(err);
+		var error = "Incorrect input or issue with the API, please try again. If this keeps happening, contact your system administrator";
+		return sendError(slackUrl, error, true);
 	};
 };
+
+var sendError = function(slackUrl, errorMessage, isEphemeral) {
+	var error = {"text": errorMessage};
+	error.response_type = isEphemeral ? "ephemeral" : "in_channel";
+	error = JSON.stringify(error);
+	console.log(err);
+	return postToSlack(slackUrl, error);
+}
 
 module.exports = {
 	postToSlack: postToSlack,
 	getAndFormatResp: getAndFormatResp,
+	sendError: sendError
 };

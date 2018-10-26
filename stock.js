@@ -22,12 +22,18 @@ var stockCNBCAsync = async function(req, res) {
 	};
 	
 	var stockReqs = inputString.split(" ");
+	bool didSendAnything = false;
 	stockReqs.forEach(async function(e) { 
 		var slackUrl = req.body.response_url || localSlackUri
 		var apiUrl = 'http://quote.cnbc.com/quote-html-webservice/quote.htm?symbols=' + e +'&symbolType=symbol&requestMethod=itv&exthrs=1&extMode=&fund=1&skipcache=&extendedMask=1&partnerId=20051&noform=1';
 		
-		await slackAPI.getAndFormatResp(apiUrl, slackUrl, formatStockResults, req, res, filter);
+		didSendAnything &= await slackAPI.getAndFormatResp(apiUrl, slackUrl, formatStockResults, req, res, filter);
 	});
+	
+	if(!didSendAnything) {
+		var error = "No responses!";
+		slackAPI.sendError(slackUrl, error, false);
+	};
 };
 
 var cryptoAsync = async function(req, res) {
