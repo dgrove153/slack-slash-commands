@@ -159,11 +159,11 @@ var formatStockResults = function(apiResp, filter, requestData) {
 		fields.value = stockInfo.symbol + " is not a valid symbol. Pls.";
 	};
 	
-	if (requestData.user_name != "bsnaxx") {
-		fields.title = "Who even cares";
-		fields.value = "";
-		attachment.color = "black";
-	};
+	//if (requestData.user_name != "bsnaxx") {
+	//	fields.title = "Who even cares";
+	//	fields.value = "";
+	//	attachment.color = "black";
+	//};
 	
 	attachment.fields = [fields];
 	resp.attachments.push(attachment);
